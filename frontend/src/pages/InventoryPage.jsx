@@ -118,7 +118,7 @@ function InventoryTable({
   return (
     <div className="overflow-x-auto rounded-xl border border-slate-200 shadow-sm">
       <table className="w-full min-w-[900px] text-left text-xs sm:text-sm whitespace-nowrap">
-        <thead className="bg-red-500 text-slate-100 font-bold uppercase tracking-wider">
+        <thead className="bg-blue-500 text-slate-100 font-bold uppercase tracking-wider">
           <tr>
             <th className="p-3">Status</th>
             <th className="p-3 text-center">Stock</th>
@@ -184,7 +184,7 @@ function InventoryTable({
                           <button
                             type="button"
                             onClick={() => onEdit(p)}
-                            className="text-xs font-bold bg-amber-100 hover:bg-amber-500 hover:text-white px-2.5 py-1 rounded-lg"
+                            className="text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white px-2.5 py-1 rounded-lg"
                           >
                             Edit
                           </button>
@@ -582,10 +582,10 @@ export default function InventoryPage() {
           return (
             <div key={brand}>
               <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-                <h3 className="text-base font-black text-slate-800 border-l-4 border-red-600 pl-3">
+                <h3 className="text-base font-black text-slate-800 border-l-4 border-blue-600 pl-3">
                   {brand}
                 </h3>
-                <div className="space-y-4h-2 w-2 rounded-full bg-red-500" />
+                <div className="space-y-4h-2 w-2 rounded-full bg-blue-500" />
               </div>
               <div className="space-y-8 pt-4">
                 {filled.length > 0 && renderInventorySection("Filled Tank", filled)}
@@ -612,7 +612,7 @@ export default function InventoryPage() {
               <button
                 type="button"
                 onClick={() => setAddModalOpen(false)}
-                className="px-4 py-2 rounded-xl bg-slate-100 text-sm font-bold"
+                className="px-4 py-2 rounded-xl bg-red-600 text-white text-sm font-bold"
               >
                 Cancel
               </button>
@@ -620,7 +620,7 @@ export default function InventoryPage() {
                 type="submit"
                 form="add-product-form"
                 disabled={saving}
-                className="px-4 py-2 rounded-xl bg-red-600 text-white text-sm font-bold"
+                className="px-4 py-2 rounded-xl bg-blue-600 text-white text-sm font-bold"
               >
                 {saving ? "Saving..." : "Save Product Record"}
               </button>
@@ -920,62 +920,6 @@ export default function InventoryPage() {
         />
       )}
 
-      {isAdministrator && archiveTarget && (
-        <Modal
-          title="Archive Inventory Record"
-          onClose={() => setArchiveTarget(null)}
-          footer={
-            <>
-              <button
-                type="button"
-                onClick={() => setArchiveTarget(null)}
-                className="px-4 py-2 rounded-xl bg-slate-100 text-sm font-bold"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                disabled={saving}
-                onClick={confirmArchive}
-                className="px-4 py-2 rounded-xl bg-indigo-600 text-white text-sm font-bold"
-              >
-                {saving ? "Archiving..." : "Confirm Archive"}
-              </button>
-            </>
-          }
-        >
-          <div className="space-y-2 text-sm text-slate-600">
-            <p>
-              Are you sure you want to archive this inventory record? This action
-              will move the product to the Archived Inventory list and remove it
-              from the active inventory.
-            </p>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 space-y-1">
-              <p>
-                <strong>Brand:</strong> {archiveTarget.brand}
-              </p>
-              <p>
-                <strong>Weight Class:</strong> {archiveTarget.weight_class}kg
-              </p>
-              <p>
-                <strong>Tank Status:</strong> {archiveTarget.status}
-              </p>
-              <p>
-                <strong>Stock Quantity:</strong> {archiveTarget.stock_quantity}
-              </p>
-              <p>
-                <strong>Date Added:</strong>{" "}
-                {new Date(archiveTarget.created_at).toLocaleDateString("en-PH", {
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                })}
-              </p>
-            </div>
-          </div>
-        </Modal>
-      )}
-
       {isAdministrator && deleteTarget && (
         <Modal
           title="Delete Product"
@@ -985,7 +929,7 @@ export default function InventoryPage() {
               <button
                 type="button"
                 onClick={() => setDeleteTarget(null)}
-                className="px-4 py-2 rounded-xl bg-slate-100 text-sm font-bold"
+                className="px-4 py-2 rounded-xl bg-red-600 text-white text-sm font-bold"
               >
                 Cancel
               </button>
@@ -993,7 +937,7 @@ export default function InventoryPage() {
                 type="button"
                 disabled={saving}
                 onClick={confirmDelete}
-                className="px-4 py-2 rounded-xl bg-red-600 text-white text-sm font-bold"
+                className="px-4 py-2 rounded-xl bg-blue-600 text-white text-sm font-bold"
               >
                 Confirm Delete
               </button>

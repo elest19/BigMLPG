@@ -19,4 +19,6 @@ export const env = {
   seedAdminUsername: process.env.SEED_ADMIN_USERNAME || 'admin',
   seedAdminPassword: process.env.SEED_ADMIN_PASSWORD || 'Admin@12345',
   seedAdminName: process.env.SEED_ADMIN_NAME || 'System Admin',
+  loginRateLimitWindowMinutes: Number(process.env.LOGIN_RATE_LIMIT_WINDOW_MINUTES) || 15,
+  loginRateLimitMax: Number(process.env.LOGIN_RATE_LIMIT_MAX) || 6,
 };

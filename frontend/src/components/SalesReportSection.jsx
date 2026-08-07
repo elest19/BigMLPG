@@ -226,8 +226,10 @@ export default function SalesReportSection({ refreshKey = 0 }) {
         api.getSalesReport(params),
         api.getDailyMetrics(params),
       ]);
-      setReport(reportRes.data);
-      setDailyMetrics(metricsRes.data);
+      const normalizedReport = reportRes?.data?.data ?? reportRes?.data ?? reportRes;
+      const normalizedMetrics = metricsRes?.data?.data ?? metricsRes?.data ?? metricsRes;
+      setReport(normalizedReport);
+      setDailyMetrics(normalizedMetrics);
     } catch (err) {
       showToast("Report Failed", err.message, "error");
     } finally {
@@ -239,8 +241,8 @@ export default function SalesReportSection({ refreshKey = 0 }) {
     loadReport();
   }, [loadReport, refreshKey]);
 
-  const summary = report?.summary;
-  const brandMetrics = report?.brandMetrics || [];
+  const summary = report?.summary || report?.data?.summary || report || {};
+  const brandMetrics = report?.brandMetrics || report?.data?.brandMetrics || [];
 
   return (
     <section

@@ -215,6 +215,7 @@ export default function SaleForm({
 
     if (!selectedCustomer) return;
 
+    setCustomerName(selectedCustomer.name || "");
     setLocation(selectedCustomer.location || "");
     setPhoneNumber(selectedCustomer.phone_number || "");
   }, [mode, customerId, customers]);

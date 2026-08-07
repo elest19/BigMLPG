@@ -7,7 +7,7 @@ import Logo from "../../BigMLPG.jpg";
 const navClass = ({ isActive }) =>
   `px-4 py-2.5 text-sm rounded-xl transition ${
     isActive
-      ? "font-bold text-red-600 bg-red-50"
+      ? "font-bold text-blue-600 bg-blue-50"
       : "font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100"
   }`;
 

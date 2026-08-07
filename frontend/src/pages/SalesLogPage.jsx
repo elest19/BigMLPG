@@ -37,9 +37,6 @@ export default function SalesLogPage() {
   const [expenseEditTarget, setExpenseEditTarget] = useState(null);
   const [expenseDeleteTarget, setExpenseDeleteTarget] = useState(null);
   const [downloadModalOpen, setDownloadModalOpen] = useState(false);
-  const [deleteAllModalOpen, setDeleteAllModalOpen] = useState(false);
-  const [deleteAllWarningOpen, setDeleteAllWarningOpen] = useState(false);
-  const [deleteAllConfirmation, setDeleteAllConfirmation] = useState("");
   const [saving, setSaving] = useState(false);
   const [expenses, setExpenses] = useState([]);
   const [expenseFilter, setExpenseFilter] = useState("today");
@@ -50,7 +47,6 @@ export default function SalesLogPage() {
   const [mobileDetail, setMobileDetail] = useState(null);
   const isMobile = useIsMobile();
   const pageSize = 10;
-  const deleteAllConfirmationPhrase = "I confirm to delete the sales logs";
 
   const selectedSale = sales.find((s) => s.sale_id === selectedSaleId);
 
@@ -175,10 +171,6 @@ export default function SalesLogPage() {
     try {
       setLoading(true);
       const params = { limit: "100" };
-      if (search) params.search = search;
-      if (dateFilter) params.dateFilter = dateFilter;
-      if (customerNameFilter) params.customerName = customerNameFilter;
-      if (productFilter) params.productFilter = productFilter;
 
       const [salesRes, productsRes, customersRes] = await Promise.all([
         api.getSales(params),
@@ -194,7 +186,7 @@ export default function SalesLogPage() {
     } finally {
       setLoading(false);
     }
-  }, [search, dateFilter, customerNameFilter, productFilter, showToast]);
+  }, [showToast]);
 
   const loadExpenses = useCallback(async () => {
     try {
@@ -267,42 +259,6 @@ export default function SalesLogPage() {
       if (selectedSaleId === deleteTarget.sale_id) setSelectedSaleId(null);
       setDeleteTarget(null);
       await loadData();
-    } catch (err) {
-      showToast("Delete Failed", err.message, "error");
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const resetDeleteAllState = () => {
-    setDeleteAllConfirmation("");
-    setDeleteAllModalOpen(false);
-    setDeleteAllWarningOpen(false);
-  };
-
-  const openDeleteAllModal = () => {
-    resetDeleteAllState();
-    setDeleteAllModalOpen(true);
-  };
-
-  const continueDeleteAll = () => {
-    setDeleteAllModalOpen(false);
-    setDeleteAllWarningOpen(true);
-  };
-
-  const confirmDeleteAllSales = async () => {
-    try {
-      setSaving(true);
-      await api.deleteAllSales();
-      showToast("Sales Log Cleared", "All sales records were deleted successfully.");
-      resetDeleteAllState();
-      setSelectedSaleId(null);
-      setDeleteTarget(null);
-      setPaymentEditTarget(null);
-      setPaymentDeleteTarget(null);
-      setExpenseDeleteTarget(null);
-      setMobileDetail(null);
-      await Promise.all([loadData(), loadExpenses()]);
     } catch (err) {
       showToast("Delete Failed", err.message, "error");
     } finally {
@@ -444,13 +400,6 @@ export default function SalesLogPage() {
             </h2>
             {isAdministrator && (
               <div className="flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={openDeleteAllModal}
-                  className="bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl"
-                >
-                  Delete All Sales
-                </button>
                 <button
                   type="button"
                   onClick={() => setDownloadModalOpen(true)}
@@ -787,84 +736,6 @@ export default function SalesLogPage() {
           />
         )}
 
-        {isAdministrator && deleteAllModalOpen && (
-          <Modal
-            title="Delete All Sales"
-            onClose={resetDeleteAllState}
-            footer={
-              <>
-                <button
-                  type="button"
-                  onClick={resetDeleteAllState}
-                  className="px-4 py-2 rounded-xl text-white bg-red-600 text-sm font-bold"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  disabled={deleteAllConfirmation !== deleteAllConfirmationPhrase || saving}
-                  onClick={continueDeleteAll}
-                  className="px-4 py-2 rounded-xl bg-blue-600 text-white text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  Continue
-                </button>
-              </>
-            }
-          >
-            <div className="space-y-4">
-              <p className="text-sm text-slate-600">
-                This action permanently deletes every sales record and related payment history. Type the exact phrase below to continue.
-              </p>
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-                <p className="text-[11px] font-bold uppercase tracking-wide text-slate-500">Required phrase</p>
-                <p className="mt-1 font-mono text-sm text-slate-700">{deleteAllConfirmationPhrase}</p>
-              </div>
-              <label className="block text-xs font-bold uppercase tracking-wide text-slate-500">
-                Confirmation
-                <input
-                  type="text"
-                  value={deleteAllConfirmation}
-                  onChange={(event) => setDeleteAllConfirmation(event.target.value)}
-                  className="mt-2 w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
-                  placeholder="Type the phrase exactly"
-                />
-              </label>
-            </div>
-          </Modal>
-        )}
-
-        {isAdministrator && deleteAllWarningOpen && (
-          <Modal
-            title="Final Warning"
-            onClose={resetDeleteAllState}
-            footer={
-              <>
-                <button
-                  type="button"
-                  onClick={resetDeleteAllState}
-                  className="px-4 py-2 rounded-xl text-white bg-red-600 text-sm font-bold"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  disabled={saving}
-                  onClick={confirmDeleteAllSales}
-                  className="px-4 py-2 rounded-xl bg-blue-600 text-white text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  Confirm Delete
-                </button>
-              </>
-            }
-          >
-            <div className="space-y-3">
-              <p className="text-sm font-semibold text-slate-800">Are you sure you want to continue?</p>
-              <p className="text-sm text-slate-600">
-                This action is permanent and cannot be undone. Make sure you already have a backup or exported copy of the Sales Log History before deleting all sales records.
-              </p>
-            </div>
-          </Modal>
-        )}
 
         {isAdministrator && deleteTarget && (
           <Modal
@@ -1152,7 +1023,7 @@ export default function SalesLogPage() {
                 ))}
                 {expenses.length === 0 && (
                   <tr>
-                    <td colSpan={3} className="text-center py-4 text-slate-400">
+                    <td colSpan={4} className="text-center py-4 text-slate-400">
                       No expenses recorded for the selected period.
                     </td>
                   </tr>

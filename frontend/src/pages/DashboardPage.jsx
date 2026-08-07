@@ -222,7 +222,7 @@ export default function DashboardPage() {
           <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
             Total Filled Stock
           </p>
-          <p className="text-2xl font-bold text-indigo-600 mt-1">
+          <p className="text-2xl font-bold text-slate-600 mt-1">
             {metrics?.totalFilledStock || 0} Tanks
           </p>
         </article>
