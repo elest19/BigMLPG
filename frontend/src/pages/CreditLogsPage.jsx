@@ -1,0 +1,518 @@
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { api, formatCurrency } from '../api/client';
+import { useToast } from '../context/ToastContext';
+import LoadingSpinner from '../components/LoadingSpinner';
+import Modal from '../components/Modal';
+import ResponsiveDetailModal from '../components/ResponsiveDetailModal';
+import DownloadCreditLogModal from '../components/DownloadCreditLogModal';
+import { subscribeRealtime } from '../utils/realtime';
+import useIsMobile from '../hooks/useIsMobile';
+
+function CreditStatusBadge({ status }) {
+  const isPaid = status === 'Paid';
+  return (
+    <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-black uppercase ${isPaid ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}`}>
+      {status}
+    </span>
+  );
+}
+
+function CreditDetailModal({ saleId, readOnly, onClose, onSettled }) {
+  const { showToast } = useToast();
+  const [summary, setSummary] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [amountToPay, setAmountToPay] = useState('');
+  const [confirmSettlement, setConfirmSettlement] = useState(null);
+  const [saving, setSaving] = useState(false);
+
+  const loadSummary = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await api.getCreditSummary(saleId);
+      setSummary(res.data);
+    } catch (err) {
+      showToast('Load Failed', err.message, 'error');
+    } finally {
+      setLoading(false);
+    }
+  }, [saleId, showToast]);
+
+  useEffect(() => {
+    loadSummary();
+  }, [loadSummary]);
+
+  useEffect(() => {
+    const unsubscribe = subscribeRealtime('credits:changed', () => {
+      loadSummary();
+    });
+
+    return () => unsubscribe();
+  }, [loadSummary]);
+
+  const handleSettlementRequest = () => {
+    const amount = Number(amountToPay);
+    if (!amount || amount <= 0) {
+      showToast('Invalid Amount', 'Enter a valid payment amount.', 'error');
+      return;
+    }
+    if (amount > summary.remaining_credit) {
+      showToast('Invalid Amount', 'Payment exceeds remaining balance.', 'error');
+      return;
+    }
+    setConfirmSettlement({
+      amount,
+      remainingBefore: summary.remaining_credit,
+      remainingAfter: Number((summary.remaining_credit - amount).toFixed(2)),
+    });
+  };
+
+  const commitSettlement = async () => {
+    if (!confirmSettlement) return;
+    try {
+      setSaving(true);
+      await api.createCreditPayment(saleId, confirmSettlement.amount);
+      showToast('Payment Recorded', 'Installment saved successfully.');
+      setConfirmSettlement(null);
+      setAmountToPay('');
+      onClose?.();
+      onSettled?.();
+    } catch (err) {
+      showToast('Payment Failed', err.message, 'error');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const title = readOnly ? 'View Credit' : 'Manage Credit';
+
+  return (
+    <>
+      <Modal title={title} onClose={onClose} size="lg">
+        {loading || !summary ? (
+          <p className="text-sm text-slate-500 text-center py-6">Loading...</p>
+        ) : (
+          <div className="space-y-4">
+            <dl className="text-sm space-y-2 bg-slate-50 p-4 rounded-xl">
+              <div className="flex justify-between"><dt className="text-slate-500">Customer Name</dt><dd className="font-semibold">{summary.customer_name}</dd></div>
+              <div className="flex justify-between"><dt className="text-slate-500">Phone Number</dt><dd>{summary.phone_number || '-'}</dd></div>
+              <div className="flex justify-between"><dt className="text-slate-500">Invoice Reference</dt><dd className="font-mono text-xs">{summary.sale_id}</dd></div>
+              <div className="flex justify-between"><dt className="text-slate-500">Product Details</dt><dd>{summary.product_details}</dd></div>
+              <div className="flex justify-between"><dt className="text-slate-500">Total Cost</dt><dd className="font-bold">{formatCurrency(summary.total_cost)}</dd></div>
+              <div className="flex justify-between"><dt className="text-slate-500">Total Paid</dt><dd className="font-bold text-emerald-600">{formatCurrency(summary.total_paid)}</dd></div>
+              <div className="flex justify-between border-t pt-2"><dt className="font-bold">Remaining Credit</dt><dd className="font-black text-red-600">{formatCurrency(summary.remaining_credit)}</dd></div>
+            </dl>
+
+            <div>
+              <h3 className="text-xs font-bold uppercase text-slate-500 mb-2">Payment History</h3>
+              <div className="overflow-x-auto border border-slate-100 rounded-xl">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-slate-50 text-slate-500 font-bold uppercase">
+                    <tr>
+                      <th className="p-3">Date Paid</th>
+                      <th className="p-3 text-right">Balance Paid</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {summary.payment_history.map((row) => (
+                      <tr key={row.credit_id}>
+                        <td className="p-3">{new Date(row.date_paid).toLocaleString('en-PH')}</td>
+                        <td className="p-3 text-right font-bold">{formatCurrency(row.balance_paid)}</td>
+                      </tr>
+                    ))}
+                    {summary.payment_history.length === 0 && (
+                      <tr><td colSpan={2} className="p-3 text-center text-slate-400">No payments recorded.</td></tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {!readOnly && summary.remaining_credit > 0 && (
+              <div className="space-y-3 border-t pt-4">
+                <div>
+                  <label htmlFor="amount-to-pay" className="block text-xs font-bold uppercase text-slate-500 mb-1">Amount To Pay Now</label>
+                  <input
+                    id="amount-to-pay"
+                    type="number"
+                    step="0.01"
+                    min="0.01"
+                    max={summary.remaining_credit}
+                    value={amountToPay}
+                    onChange={(e) => setAmountToPay(e.target.value)}
+                    className="w-full text-sm p-3 border border-slate-200 rounded-xl"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={handleSettlementRequest}
+                  className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl text-sm"
+                >
+                  Confirm Settlement
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </Modal>
+
+      {confirmSettlement && summary && (
+        <Modal
+          title="Confirm Settlement"
+          onClose={() => setConfirmSettlement(null)}
+          footer={
+            <>
+              <button type="button" onClick={() => setConfirmSettlement(null)} className="px-4 py-2 rounded-xl bg-slate-100 text-sm font-bold">Cancel</button>
+              <button type="button" disabled={saving} onClick={commitSettlement} className="px-4 py-2 rounded-xl bg-red-600 text-white text-sm font-bold">
+                {saving ? 'Processing...' : 'Confirm Payment'}
+              </button>
+            </>
+          }
+        >
+          <dl className="text-sm space-y-2">
+            <div className="flex justify-between"><dt className="text-slate-500">Customer Name</dt><dd className="font-semibold">{summary.customer_name}</dd></div>
+            <div className="flex justify-between"><dt className="text-slate-500">Invoice Reference</dt><dd className="font-mono text-xs">{summary.sale_id}</dd></div>
+            <div className="flex justify-between"><dt className="text-slate-500">Amount Being Paid</dt><dd className="font-bold text-red-600">{formatCurrency(confirmSettlement.amount)}</dd></div>
+            <div className="flex justify-between"><dt className="text-slate-500">Remaining Before Payment</dt><dd>{formatCurrency(confirmSettlement.remainingBefore)}</dd></div>
+            <div className="flex justify-between border-t pt-2"><dt className="font-bold">Remaining After Payment</dt><dd className="font-black">{formatCurrency(confirmSettlement.remainingAfter)}</dd></div>
+          </dl>
+        </Modal>
+      )}
+    </>
+  );
+}
+
+export default function CreditLogsPage() {
+  const { showToast } = useToast();
+  const [credits, setCredits] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [customerFilter, setCustomerFilter] = useState('');
+  const [dateFilter, setDateFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [brandFilter, setBrandFilter] = useState('');
+  const [weightClassFilter, setWeightClassFilter] = useState('');
+  const pageSize = 10;
+  const [activeModal, setActiveModal] = useState(null);
+  const [mobileDetail, setMobileDetail] = useState(null);
+  const [downloadOpen, setDownloadOpen] = useState(false);
+  const isMobile = useIsMobile();
+
+  const loadData = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await api.getCredits();
+      setCredits(res.data);
+    } catch (err) {
+      showToast('Load Failed', err.message, 'error');
+    } finally {
+      setLoading(false);
+    }
+  }, [showToast]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  useEffect(() => {
+    const unsubscribeCredits = subscribeRealtime('credits:changed', () => {
+      loadData();
+    });
+    const unsubscribeSales = subscribeRealtime('sales:changed', () => {
+      loadData();
+    });
+
+    return () => {
+      unsubscribeCredits();
+      unsubscribeSales();
+    };
+  }, [loadData]);
+
+  const filteredCredits = useMemo(() => {
+    const query = searchTerm.trim().toLowerCase();
+
+    return credits.filter((row) => {
+      const matchesSearch = !query || [row.customer_name, row.phone_number, row.product_details]
+        .filter(Boolean)
+        .some((value) => String(value).toLowerCase().includes(query));
+
+      const matchesCustomer = !customerFilter || String(row.customer_name || '')
+        .toLowerCase()
+        .includes(customerFilter.trim().toLowerCase());
+
+      const matchesStatus = statusFilter === 'all'
+        || (statusFilter === 'paid' ? row.credit_status === 'Paid' : row.credit_status !== 'Paid');
+
+      const matchesDate = !dateFilter || (() => {
+        const rowDate = new Date(row.date_created);
+        const filterDate = new Date(dateFilter);
+        return rowDate.getFullYear() === filterDate.getFullYear()
+          && rowDate.getMonth() === filterDate.getMonth()
+          && rowDate.getDate() === filterDate.getDate();
+      })();
+
+      const matchesBrand = !brandFilter || String(row.brand || '').toLowerCase() === brandFilter.toLowerCase();
+      const matchesWeight = !weightClassFilter || String(row.weight_class || '') === String(weightClassFilter);
+
+      return matchesSearch && matchesCustomer && matchesStatus && matchesDate && matchesBrand && matchesWeight;
+    });
+  }, [credits, customerFilter, dateFilter, searchTerm, statusFilter, brandFilter, weightClassFilter]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredCredits.length / pageSize));
+  const pagedCredits = filteredCredits.slice((page - 1) * pageSize, page * pageSize);
+
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [page, totalPages]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [customerFilter, dateFilter, searchTerm, statusFilter, brandFilter, weightClassFilter]);
+
+  const brandOptions = [...new Set(credits.map((row) => row.brand).filter(Boolean))];
+  const weightOptions = [...new Set(credits.map((row) => String(row.weight_class)).filter(Boolean))];
+
+  const openCreditDetails = (row) => {
+    setMobileDetail({
+      title: 'Credit Details',
+      details: [
+        { label: 'Customer Name', value: row.customer_name },
+        { label: 'Phone Number', value: row.phone_number || '-' },
+        { label: 'Product Details', value: row.product_details },
+        { label: 'Product Price', value: formatCurrency(row.total_amount) },
+        { label: 'Total Paid', value: formatCurrency(row.total_paid) },
+        { label: 'Remaining Credit', value: formatCurrency(row.remaining_credit) },
+        { label: 'Credit Status', value: row.credit_status },
+      ],
+      footer: (
+        <button
+          type="button"
+          onClick={() => {
+            setMobileDetail(null);
+            setActiveModal({ saleId: row.sale_id, readOnly: row.remaining_credit <= 0 });
+          }}
+          className="rounded-lg bg-blue-600 px-3 py-2 text-xs font-bold text-white"
+        >
+          {row.remaining_credit > 0 ? 'Manage Credit' : 'View Credit'}
+        </button>
+      ),
+    });
+  };
+
+  if (loading && !credits.length) return <LoadingSpinner />;
+
+  return (
+    <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+      <div className="border-b border-slate-100 pb-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-bold text-slate-900">Customer Credit Register</h2>
+          <button type="button" onClick={() => setDownloadOpen(true)} className="bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs px-4 py-2.5 rounded-xl">Download Credit Log</button>
+        </div>
+        <p className="text-xs text-red-600 font-bold uppercase tracking-wider mt-1">UTANG DESK</p>
+        <p className="text-xs text-slate-400 mt-1">Track outstanding balances, installment payments, and customer credit status</p>
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+        {!isMobile && (
+          <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+            <span className="mb-1 block">Search</span>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Customer, number, product"
+              className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
+            />
+          </label>
+        )}
+        <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+          <span className="mb-1 block">Customer</span>
+          <input
+            type="text"
+            value={customerFilter}
+            onChange={(e) => setCustomerFilter(e.target.value)}
+            placeholder="Filter by customer"
+            className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
+          />
+        </label>
+        <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+          <span className="mb-1 block">Date</span>
+          <input
+            type="date"
+            value={dateFilter}
+            onChange={(e) => setDateFilter(e.target.value)}
+            className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
+          />
+        </label>
+        <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+          <span className="mb-1 block">Credit Status</span>
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
+          >
+            <option value="all">All</option>
+            <option value="unpaid">Unpaid</option>
+            <option value="paid">Paid</option>
+          </select>
+        </label>
+        {isMobile && (
+          <>
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              <span className="mb-1 block">Brand</span>
+              <select
+                value={brandFilter}
+                onChange={(e) => setBrandFilter(e.target.value)}
+                className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
+              >
+                <option value="">All Brands</option>
+                {brandOptions.map((brand) => (
+                  <option key={brand} value={brand}>{brand}</option>
+                ))}
+              </select>
+            </label>
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              <span className="mb-1 block">Weight Class</span>
+              <select
+                value={weightClassFilter}
+                onChange={(e) => setWeightClassFilter(e.target.value)}
+                className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
+              >
+                <option value="">All Weights</option>
+                {weightOptions.map((weight) => (
+                  <option key={weight} value={weight}>{weight}kg</option>
+                ))}
+              </select>
+            </label>
+          </>
+        )}
+      </div>
+
+      {isMobile ? (
+        <div className="space-y-2">
+          {pagedCredits.map((row) => (
+            <button
+              key={row.sale_id}
+              type="button"
+              onClick={() => openCreditDetails(row)}
+              className="w-full rounded-xl border border-slate-200 bg-white p-3 text-left shadow-sm"
+            >
+              <div className="flex items-center justify-between gap-3">
+                <span className="font-bold text-slate-800">{row.customer_name}</span>
+                <span className="font-black text-red-600">{formatCurrency(row.remaining_credit)}</span>
+              </div>
+              <p className="mt-2 text-[11px] text-slate-500">{row.product_details}</p>
+            </button>
+          ))}
+          {filteredCredits.length === 0 && (
+            <p className="rounded-xl border border-dashed border-slate-200 p-4 text-center text-sm text-slate-400">
+              {credits.length === 0 ? 'No credit sales recorded.' : 'No matching credit sales found.'}
+            </p>
+          )}
+        </div>
+      ) : (
+        <div className="overflow-x-auto rounded-xl border border-slate-200 shadow-sm">
+          <table className="w-full min-w-[900px] text-left text-xs sm:text-sm whitespace-nowrap">
+            <thead className="bg-red-500 text-slate-100 font-bold uppercase tracking-wider">
+              <tr>
+                <th className="p-3">Customer Name</th>
+                <th className="p-3">Number</th>
+                <th className="p-3">Product Details</th>
+                <th className="p-3 text-center">Product Price</th>
+                <th className="p-3 text-center">Total Paid</th>
+                <th className="p-3 text-center">Remaining Credit</th>
+                <th className="p-3 text-center">Credit Status</th>
+                <th className="p-3 text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="font-medium text-slate-600">
+              {pagedCredits.map((row) => (
+                <tr
+                  key={row.sale_id}
+                  className="odd:bg-white even:bg-slate-50/70 hover:bg-slate-100/80 transition-colors"
+                >
+                  <td className="p-3 font-bold text-slate-800">{row.customer_name}</td>
+                  <td className="p-3 font-mono text-xs">{row.phone_number || '-'}</td>
+                  <td className="p-3">{row.product_details}</td>
+                  <td className="p-3 text-center">{formatCurrency(row.total_amount)}</td>
+                  <td className="p-3 text-center text-emerald-600 font-bold">{formatCurrency(row.total_paid)}</td>
+                  <td className="p-3 text-center text-red-600 font-extrabold">{formatCurrency(row.remaining_credit)}</td>
+                  <td className="p-3 text-center"><CreditStatusBadge status={row.credit_status} /></td>
+                  <td className="p-3 text-center">
+                    {row.remaining_credit > 0 ? (
+                      <button
+                        type="button"
+                        onClick={() => setActiveModal({ saleId: row.sale_id, readOnly: false })}
+                        className="text-xs font-bold bg-red-600 text-white hover:bg-red-700 px-2.5 py-1 rounded-lg"
+                      >
+                        Manage Credit
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setActiveModal({ saleId: row.sale_id, readOnly: true })}
+                        className="text-xs font-bold bg-slate-100 hover:bg-slate-800 hover:text-white px-2.5 py-1 rounded-lg"
+                      >
+                        View Credit
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+              {filteredCredits.length === 0 && (
+                <tr><td colSpan={8} className="text-center py-8 text-slate-400">{credits.length === 0 ? 'No credit sales recorded.' : 'No matching credit sales found.'}</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {filteredCredits.length > pageSize && (
+        <div className="flex items-center justify-between gap-3 px-4 py-3 bg-slate-50 border-t border-slate-200 text-xs text-slate-600">
+          <button
+            type="button"
+            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+            disabled={page <= 1}
+            className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <div>
+            Page {page} of {totalPages}
+          </div>
+          <button
+            type="button"
+            onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+            disabled={page >= totalPages}
+            className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      )}
+
+      {mobileDetail && (
+        <ResponsiveDetailModal
+          title={mobileDetail.title}
+          onClose={() => setMobileDetail(null)}
+          details={mobileDetail.details}
+          footer={mobileDetail.footer}
+        />
+      )}
+
+      {activeModal && (
+        <CreditDetailModal
+          saleId={activeModal.saleId}
+          readOnly={activeModal.readOnly}
+          onClose={() => setActiveModal(null)}
+          onSettled={loadData}
+        />
+      )}
+      {downloadOpen && (
+        <DownloadCreditLogModal onClose={() => setDownloadOpen(false)} />
+      )}
+    </div>
+  );
+}

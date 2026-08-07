@@ -1,0 +1,245 @@
+const API_URL = import.meta.env.VITE_API_URL || "/api";
+
+function getToken() {
+  return localStorage.getItem("rclpg_token");
+}
+
+function getExpiry() {
+  return localStorage.getItem("rclpg_expires_at");
+}
+
+export { getToken, getExpiry };
+
+export function clearSession() {
+  localStorage.removeItem("rclpg_token");
+  localStorage.removeItem("rclpg_expires_at");
+  localStorage.removeItem("rclpg_admin");
+}
+
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function isRetryableNetworkError(error) {
+  const message = String(error?.message || '');
+  return (
+    error instanceof TypeError ||
+    /Failed to fetch|NetworkError|ERR_CONNECTION_CLOSED|ECONNRESET|ECONNREFUSED/i.test(message)
+  );
+}
+
+async function requestWithRetry(path, options = {}, retries = 1, delayMs = 3000) {
+  for (let attempt = 1; attempt <= retries; attempt += 1) {
+    try {
+      return await request(path, options);
+    } catch (error) {
+      if (attempt === retries || !isRetryableNetworkError(error)) {
+        throw error;
+      }
+      await delay(delayMs);
+    }
+  }
+}
+
+export function isSessionExpired() {
+  const expiry = getExpiry();
+  if (!expiry) return true;
+  return new Date() >= new Date(expiry);
+}
+
+async function request(path, options = {}) {
+  const headers = {
+    "Content-Type": "application/json",
+    ...(options.headers || {}),
+  };
+
+  const token = getToken();
+  if (token && !isSessionExpired()) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  const response = await fetch(`${API_URL}${path}`, {
+    ...options,
+    headers,
+  });
+
+  if (response.status === 401) {
+    clearSession();
+    if (!path.includes("/auth/login")) {
+      window.location.href = "/login";
+    }
+  }
+
+  const contentType = response.headers.get("content-type") || "";
+  if (contentType.includes("application/json")) {
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || "Request failed");
+    }
+    return data;
+  }
+
+  if (!response.ok) {
+    throw new Error("Download failed");
+  }
+
+  return response;
+}
+
+export const api = {
+  login: (username, password) =>
+    requestWithRetry(
+      "/auth/login",
+      {
+        method: "POST",
+        body: JSON.stringify({ username, password }),
+      },
+      6,
+      5000,
+    ),
+  register: (name, username, email, password, phoneNumber) =>
+    request("/auth/register", {
+      method: "POST",
+      body: JSON.stringify({ name, username, email, password, phoneNumber }),
+    }),
+  me: () => request("/auth/me"),
+  getProfile: () => request("/users/me"),
+  updateProfile: (body) =>
+    request("/users/me", { method: "PUT", body: JSON.stringify(body) }),
+  getUsers: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/users${qs ? `?${qs}` : ""}`);
+  },
+  getUser: (adminId) => request(`/users/${adminId}`),
+  updateUser: (adminId, body) =>
+    request(`/users/${adminId}`, { method: "PUT", body: JSON.stringify(body) }),
+  deleteUser: (adminId) =>
+    request(`/users/${adminId}`, { method: "DELETE" }),
+  archiveUser: (adminId) =>
+    request(`/users/${adminId}/archive`, { method: "PATCH" }),
+  createUser: (body) =>
+    request("/users", { method: "POST", body: JSON.stringify(body) }),
+  getMetrics: () => request("/dashboard/metrics"),
+  getProducts: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/products${qs ? `?${qs}` : ""}`);
+  },
+  createProduct: (body) =>
+    request("/products", { method: "POST", body: JSON.stringify(body) }),
+  archiveProduct: (productId) =>
+    request(`/products/${productId}/archive`, { method: "PATCH" }),
+  updateProduct: (productId, body) =>
+    request(`/products/${productId}`, {
+      method: "PUT",
+      body: JSON.stringify(body),
+    }),
+  deleteProduct: (productId) =>
+    request(`/products/${productId}`, { method: "DELETE" }),
+  getWeeklySummary: () => request("/products/summary/weekly"),
+  getBrandOverview: () => request("/products/summary/brands"),
+  getSalesReport: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/dashboard/sales-report${qs ? `?${qs}` : ""}`);
+  },
+  getDailyMetrics: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/dashboard/daily-metrics${qs ? `?${qs}` : ""}`);
+  },
+  getCustomers: (search = "") =>
+    request(`/customers?search=${encodeURIComponent(search)}`),
+  getSales: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/sales?${qs}`);
+  },
+  createSale: (body) =>
+    request("/sales", { method: "POST", body: JSON.stringify(body) }),
+  updateSale: (saleId, body) =>
+    request(`/sales/${saleId}`, { method: "PUT", body: JSON.stringify(body) }),
+  deleteSale: (saleId) => request(`/sales/${saleId}`, { method: "DELETE" }),
+  deleteAllSales: () => request("/sales/all", { method: "DELETE" }),
+  getCredits: () => request("/credits"),
+  getCreditSummary: (saleId) => request(`/credits/${saleId}/summary`),
+  getCreditHistory: (saleId) => request(`/credits/${saleId}/history`),
+  createCreditPayment: (saleId, amount) =>
+    request(`/credits/${saleId}/payments`, {
+      method: "POST",
+      body: JSON.stringify({ amount }),
+    }),
+  updateCreditPayment: (creditId, amount) =>
+    request(`/credits/${creditId}`, {
+      method: "PUT",
+      body: JSON.stringify({ amount }),
+    }),
+  deleteCreditPayment: (creditId) =>
+    request(`/credits/${creditId}`, { method: "DELETE" }),
+  getExpenses: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/expenses${qs ? `?${qs}` : ""}`);
+  },
+  getExpenseCategories: () => request("/expenses/categories"),
+  createExpense: (body) =>
+    request("/expenses", { method: "POST", body: JSON.stringify(body) }),
+  updateExpense: (expensesId, body) =>
+    request(`/expenses/${expensesId}`, {
+      method: "PUT",
+      body: JSON.stringify(body),
+    }),
+  deleteExpense: (expensesId) =>
+    request(`/expenses/${expensesId}`, { method: "DELETE" }),
+  getBrands: () => request("/brands"),
+  createBrand: (name) =>
+    request("/brands", { method: "POST", body: JSON.stringify({ name }) }),
+  exportReport: async (params) => {
+    const qs = new URLSearchParams(params).toString();
+    const response = await request(`/dashboard/export?${qs}`);
+    const blob = await response.blob();
+    const disposition = response.headers.get("Content-Disposition") || "";
+    const match = disposition.match(/filename="(.+)"/);
+    const filename =
+      match?.[1] || `RCLPG_Report.${params.format === "pdf" ? "pdf" : "xlsx"}`;
+    return { blob, filename };
+  },
+  downloadSalesReport: async (params) => {
+    const qs = new URLSearchParams(params).toString();
+    const response = await request(`/dashboard/download-sales-report?${qs}`);
+    const blob = await response.blob();
+    const disposition = response.headers.get("Content-Disposition") || "";
+    const match = disposition.match(/filename="(.+)"/);
+    const filename = match?.[1] || `RCLPG_Sales_Report_${Date.now()}.pdf`;
+    return { blob, filename };
+  },
+  downloadSalesLog: async (params) => {
+    const qs = new URLSearchParams(params).toString();
+    const response = await request(`/dashboard/download-sales-log?${qs}`);
+    const blob = await response.blob();
+    const disposition = response.headers.get("Content-Disposition") || "";
+    const match = disposition.match(/filename="(.+)"/);
+    const filename = match?.[1] || `RCLPG_Sales_Log_${Date.now()}.pdf`;
+    return { blob, filename };
+  },
+  downloadCreditLog: async (params) => {
+    const qs = new URLSearchParams(params).toString();
+    const response = await request(`/dashboard/download-credit-log?${qs}`);
+    const blob = await response.blob();
+    const disposition = response.headers.get("Content-Disposition") || "";
+    const match = disposition.match(/filename="(.+)"/);
+    const filename = match?.[1] || `RCLPG_Credit_Log_${Date.now()}.pdf`;
+    return { blob, filename };
+  },
+};
+
+export function saveSession({ token, expiresAt, admin }) {
+  localStorage.setItem("rclpg_token", token);
+  localStorage.setItem("rclpg_expires_at", expiresAt);
+  localStorage.setItem("rclpg_admin", JSON.stringify(admin));
+}
+
+export function getStoredAdmin() {
+  const raw = localStorage.getItem("rclpg_admin");
+  return raw ? JSON.parse(raw) : null;
+}
+
+export const formatCurrency = (value) =>
+  new Intl.NumberFormat("en-PH", { style: "currency", currency: "PHP" }).format(
+    Number(value) || 0,
+  );
