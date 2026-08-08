@@ -9,8 +9,8 @@ import Logo from "../../BigMLPG.jpg";
 const navClass = ({ isActive }) =>
   `px-4 py-2.5 text-sm rounded-xl transition ${
     isActive
-      ? "font-bold text-blue-600 bg-blue-50"
-      : "font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+      ? "font-bold text-blue-600 text-blue bg-gray-300"
+      : "font-semibold text-slate-100 hover:text-blue-600 hover:bg-slate-100"
   }`;
 
 export default function Layout({ children }) {
@@ -27,7 +27,7 @@ export default function Layout({ children }) {
 
   return (
     <div className="min-h-full flex flex-col">
-      <header className="sticky top-0 z-40 w-full bg-white border-b border-slate-200 shadow-sm">
+      <header className="sticky top-0 z-40 w-full bg-gray-900 border-b border-slate-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-24 items-center justify-between gap-4">
             <div className="flex items-center space-x-4">
@@ -40,7 +40,7 @@ export default function Layout({ children }) {
                 className="h-16 w-16 object-contain rounded-xl shadow-sm border border-slate-100"
               />
               <div>
-                <span className="block text-lg font-black text-slate-900 tracking-tight leading-none">
+                <span className="block text-lg font-bold text-slate-100 tracking-tight leading-none">
                   BigMLPG
                 </span>
                 <span className="text-[11px] text-red-600 font-bold tracking-wider uppercase mt-1.5 block">
@@ -53,7 +53,7 @@ export default function Layout({ children }) {
               className="hidden md:flex space-x-1"
               aria-label="Main Navigation"
             >
-              <NavLink to="/dashboard" className={navClass} end>
+              <NavLink to="/dashboard" className={navClass } end>
                 Dashboard & Sales
               </NavLink>
               <NavLink to="/inventory" className={navClass}>
@@ -77,7 +77,7 @@ export default function Layout({ children }) {
                 <button
                   type="button"
                   onClick={() => setProfileOpen(true)}
-                  className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs px-3 py-2.5 rounded-xl transition"
+                  className="bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold text-xs px-3 py-2.5 rounded-xl transition"
                   aria-label="Open profile"
                 >
                   Profile
@@ -94,7 +94,7 @@ export default function Layout({ children }) {
 
             <button
               type="button"
-              className="md:hidden text-slate-600 p-2 rounded-xl"
+              className="md:hidden text-slate-200 p-2 rounded-xl"
               aria-label="Toggle menu"
               aria-expanded={mobileOpen}
               onClick={() => setMobileOpen((v) => !v)}
@@ -127,16 +127,26 @@ export default function Layout({ children }) {
             />
           )}
           <div
-            className={`fixed top-0 right-0 z-50 flex h-full w-72 max-w-[85vw] flex-col border-l border-slate-200 bg-white shadow-2xl transition-transform duration-300 ${mobileOpen ? "translate-x-0" : "translate-x-full"}`}
+            className={`fixed top-0 right-0 z-50 flex h-full w-72 max-w-[85vw] flex-col border-l border-slate-200 bg-gray-800 shadow-2xl transition-transform duration-300 ${mobileOpen ? "translate-x-0" : "translate-x-full"}`}
           >
             <div className="flex items-center justify-between border-b border-slate-200 px-4 py-4">
-              <div>
-                <p className="text-sm font-black text-slate-900">BigMLPG</p>
-                <p className="text-xs text-slate-500">Navigate the portal</p>
+              <div className="flex items-center gap-3">
+                <img
+                  src={Logo}
+                  alt="BigMLPG Logo"
+                  onError={(e) => {
+                    e.currentTarget.src = "https://placehold.co/48x48?text=BigMLPG";
+                  }}
+                  className="h-10 w-10 rounded-xl border border-slate-100 object-contain"
+                />
+                <div>
+                  <p className="text-sm font-black text-slate-200">BigMLPG</p>
+                  <p className="text-xs text-slate-300">Navigate the portal</p>
+                </div>
               </div>
               <button
                 type="button"
-                className="rounded-lg p-2 text-slate-500 hover:bg-slate-100"
+                className="rounded-lg p-2 text-slate-200 hover:bg-slate-100"
                 aria-label="Close menu"
                 onClick={() => setMobileOpen(false)}
               >
@@ -152,7 +162,7 @@ export default function Layout({ children }) {
                   `block rounded-xl px-3 py-2.5 text-sm transition-colors ${
                     isActive
                       ? "bg-blue-50 font-bold text-blue-600"
-                      : "text-slate-600 hover:bg-slate-100"
+                      : "text-slate-600 hover:bg-slate-500 hover:text-slate-100"
                   }`
                 }
                 onClick={() => setMobileOpen(false)}
@@ -166,7 +176,7 @@ export default function Layout({ children }) {
                   `block rounded-xl px-3 py-2.5 text-sm transition-colors ${
                     isActive
                       ? "bg-blue-50 font-bold text-blue-600"
-                      : "text-slate-600 hover:bg-slate-100"
+                      : "text-slate-300 hover:bg-slate-500 hover:text-slate-100"
                   }`
                 }
                 onClick={() => setMobileOpen(false)}
@@ -180,7 +190,7 @@ export default function Layout({ children }) {
                   `block rounded-xl px-3 py-2.5 text-sm transition-colors ${
                     isActive
                       ? "bg-blue-50 font-bold text-blue-600"
-                      : "text-slate-600 hover:bg-slate-100"
+                      : "text-slate-300 hover:bg-slate-500 hover:text-slate-100"
                   }`
                 }
                 onClick={() => setMobileOpen(false)}
@@ -194,7 +204,7 @@ export default function Layout({ children }) {
                   `block rounded-xl px-3 py-2.5 text-sm transition-colors ${
                     isActive
                       ? "bg-blue-50 font-bold text-blue-600"
-                      : "text-slate-600 hover:bg-slate-100"
+                      : "text-slate-300 hover:bg-slate-500 hover:text-slate-100"
                   }`
                 }
                 onClick={() => setMobileOpen(false)}
@@ -209,7 +219,7 @@ export default function Layout({ children }) {
                     `block rounded-xl px-3 py-2.5 text-sm transition-colors ${
                       isActive
                         ? "bg-blue-50 font-bold text-blue-600"
-                        : "text-slate-600 hover:bg-slate-100"
+                        : "text-slate-300 hover:bg-slate-500 hover:text-slate-100"
                     }`
                   }
                   onClick={() => setMobileOpen(false)}
@@ -225,7 +235,7 @@ export default function Layout({ children }) {
                     setProfileOpen(true);
                     setMobileOpen(false);
                   }}
-                  className="block w-full rounded-xl px-3 py-2.5 text-left text-sm text-slate-600 hover:bg-slate-100"
+                  className="block w-full rounded-xl px-3 py-2.5 text-left text-sm text-slate-300 hover:bg-slate-500 hover:text-slate-100"
                 >
                   Profile
                 </button>
@@ -248,7 +258,7 @@ export default function Layout({ children }) {
         {children}
       </main>
 
-      <footer className="bg-white border-t border-slate-200 py-4 mt-auto text-center text-xs text-slate-400 font-medium">
+      <footer className="bg-gray-900 border-t border-slate-200 py-4 mt-auto text-center text-xs text-slate-200 font-medium">
         <p>
           &copy; {new Date().getFullYear()} BigMLPG System. All rights reserved.
         </p>
