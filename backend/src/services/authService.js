@@ -76,7 +76,7 @@ export async function seedDefaultAdmin() {
       existing.admin_id,
     ]);
   } else {
-    const seedEmail = `${normalized}@admin.rclpg.local`;
+    const seedEmail = `${normalized}@admin.bigmlpg.local`;
     await query(
       `INSERT INTO admins (name, role, status, username, password_hash, email)
        VALUES ($1, 'Administrator', 'Active', $2, $3, $4)`,

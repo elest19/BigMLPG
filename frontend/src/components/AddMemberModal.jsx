@@ -83,7 +83,7 @@ export default function AddMemberModal({ onClose, onCreated }) {
       <div className="space-y-4">
         {error && <div className="text-sm text-red-500">{error}</div>}
         <div>
-          <label className="text-sm font-bold text-slate-100">Full Name</label>
+          <label className="text-sm font-bold text-slate-600">Full Name</label>
           <input
             ref={firstFieldRef}
             type="text"
@@ -94,7 +94,7 @@ export default function AddMemberModal({ onClose, onCreated }) {
           />
         </div>
         <div>
-          <label className="text-sm font-bold text-slate-100">Username</label>
+          <label className="text-sm font-bold text-slate-600">Username</label>
           <input
             type="text"
             value={form.username}
@@ -104,7 +104,7 @@ export default function AddMemberModal({ onClose, onCreated }) {
           />
         </div>
         <div>
-          <label className="text-sm font-bold text-slate-100">Email</label>
+          <label className="text-sm font-bold text-slate-600">Email</label>
           <input
             type="email"
             value={form.email}
@@ -114,7 +114,7 @@ export default function AddMemberModal({ onClose, onCreated }) {
           />
         </div>
         <div>
-          <label className="text-sm font-bold text-slate-100">Phone Number (optional)</label>
+          <label className="text-sm font-bold text-slate-600">Phone Number (optional)</label>
           <input
             type="tel"
             value={form.phoneNumber}
@@ -124,7 +124,7 @@ export default function AddMemberModal({ onClose, onCreated }) {
           />
         </div>
         <div>
-          <label className="text-sm font-bold text-slate-100">Role</label>
+          <label className="text-sm font-bold text-slate-600">Role</label>
           <select
             value={form.role}
             onChange={(e) => setForm((p) => ({ ...p, role: e.target.value }))}
@@ -136,7 +136,7 @@ export default function AddMemberModal({ onClose, onCreated }) {
           </select>
         </div>
         <div>
-          <label className="text-sm font-bold text-slate-100">Password</label>
+          <label className="text-sm font-bold text-slate-600">Password</label>
           <input
             type="password"
             value={form.password}
@@ -146,7 +146,7 @@ export default function AddMemberModal({ onClose, onCreated }) {
           />
         </div>
         <div>
-          <label className="text-sm font-bold text-slate-100">Confirm Password</label>
+          <label className="text-sm font-bold text-slate-600">Confirm Password</label>
           <input
             type="password"
             value={form.confirmPassword}

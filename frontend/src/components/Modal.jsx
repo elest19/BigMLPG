@@ -61,7 +61,7 @@ export default function Modal({
   }
 
   return createPortal(
-    <div className="fixed inset-0 z-[99999] p-4 sm:p-6">
+    <div className="fixed inset-0 z-50 p-4 sm:p-6">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/60"
@@ -71,18 +71,18 @@ export default function Modal({
       {/* Modal positioning */}
       <div className="fixed inset-0 flex items-center justify-center p-4 pointer-events-none">
         <div
-          className={`pointer-events-auto relative ${sizeClass} w-full rounded-xl bg-gradient-to-b from-blue-900 to-red-900 shadow-xl`}
+          className={`pointer-events-auto relative ${sizeClass} w-full max-h-[90vh] rounded-xl bg-white shadow-xl flex flex-col`}
         >
-          {/* HEADER - NOT SCROLLABLE */}
-          <div className="flex items-center justify-between p-6 pb-4">
-            <h2 className="text-lg font-bold text-white">
+          {/* HEADER */}
+          <div className="flex shrink-0 items-center justify-between p-6 pb-4">
+            <h2 className="text-lg font-bold">
               {title}
             </h2>
 
             <button
               type="button"
               onClick={onClose}
-              className="text-2xl text-white hover:text-gray-300"
+              className="text-2xl hover:text-slate-500"
               aria-label="Close modal"
             >
               ×
@@ -90,13 +90,13 @@ export default function Modal({
           </div>
 
           {/* SCROLLABLE CONTENT */}
-          <div className="max-h-[70vh] sm:max-h-[90vh] overflow-y-auto px-6">
+          <div className="min-h-0 flex-1 overflow-y-auto px-6">
             {children}
           </div>
 
-          {/* FOOTER - NOT SCROLLABLE */}
+          {/* FOOTER */}
           {footer && (
-            <div className="flex justify-end gap-2 p-6 pt-4">
+            <div className="flex shrink-0 justify-end gap-2 p-6 pt-4">
               {footer}
             </div>
           )}

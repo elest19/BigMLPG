@@ -135,9 +135,9 @@ function OrdersIcon() {
 
 function MetricCard({ label, value, icon, tone = "text-slate-500", formula }) {
   return (
-    <Card padding="lg" radius="md" shadow="sm" className="bg-gradient-to-br from-blue-900 to-red-900">
+    <Card padding="lg" radius="md" shadow="md" className="bg-white border border-slate-200">
       <Group justify="space-between" align="flex-start" mb="xs">
-        <Text size="xs" tt="uppercase" fw={700} className="text-slate-100">
+        <Text size="xs" tt="uppercase" fw={700} className="text-slate-600">
           {label}
         </Text>
         <span
@@ -174,15 +174,15 @@ function SegmentBlock({ title, items, valueKey = "revenue" }) {
   }
 
   return (
-    <Card padding="md" radius="md" className="bg-gradient-to-br from-blue-900 to-red-900">
-      <Text fw={700} mb="md" className="text-white">
+    <Card padding="md" radius="md" className="bg-white border border-slate-300 shadow-md">
+      <Text fw={700} mb="md" className="text-slate-700">
         {title}
       </Text>
       <Stack gap="sm">
         {items.map((item) => (
           <div key={item.label}>
             <Group justify="space-between" mb={4}>
-              <Text size="sm" fw={600} className="text-slate-300">
+              <Text size="sm" fw={600} className="text-slate-500">
                 {item.label}
               </Text>
               <Text size="sm" fw={700} className="text-red-500">
@@ -246,12 +246,12 @@ export default function SalesReportSection({ refreshKey = 0 }) {
 
   return (
     <section
-      className="bg-gradient-to-b from-blue-900 to-red-900 p-6 rounded-xl shadow-sm space-y-6"
+      className="bg-white border border-slate-300 p-6 rounded-xl shadow-md space-y-6"
       aria-label="Sales Report"
     >
       <div className="border-b border-slate-100 pb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <Title order={3} className="text-white">Sales Report</Title>
+          <Title order={3} className="text-black">Sales Report</Title>
           <Text size="sm" mt={4} className="text-slate-400">
             Sales Overview — filter to refresh all widgets
           </Text>
@@ -261,7 +261,7 @@ export default function SalesReportSection({ refreshKey = 0 }) {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
         <Select
           label="Quick Filters"
-          className="text-slate-100"
+          className="text-slate-600"
           value={quickFilter}
           onChange={(v) => setQuickFilter(v || "today")}
           data={[
@@ -325,7 +325,7 @@ export default function SalesReportSection({ refreshKey = 0 }) {
               label="Remaining Credit Balance"
               value={formatCurrency(summary?.totalCreditBalance)}
               icon={<CreditBalanceIcon />}
-              tone="text-slate-400"
+              tone="text-slate-500"
               formula={summary?.totalCreditBalanceFormula}
             />
             <MetricCard
@@ -338,18 +338,18 @@ export default function SalesReportSection({ refreshKey = 0 }) {
               label="Total Orders"
               value={summary?.totalOrders ?? 0}
               icon={<OrdersIcon />}
-              tone="text-slate-200"
+              tone="text-slate-600"
             />
           </SimpleGrid>
-          <div className="border-b border-slate-100 pb-3 space-y-3"></div>
+          <div className="border-b border-slate-300 pb-3 space-y-3"></div>
           <div>
-            <Title order={4} mb="md" className="text-white">
+            <Title order={4} mb="md" className="text-black">
               LPG Business Metrics
             </Title>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <Stack gap="md">
-                <Card padding="md" radius="md" className="bg-gradient-to-br from-blue-900 to-red-900">
-                  <Text fw={700} mb="md" className="text-slate-100">
+                <Card padding="md" radius="md" className="bg-white border border-slate-200 shadow-md">
+                  <Text fw={700} mb="md" className="text-black">
                     Product & Inventory Mix
                   </Text>
                   <Stack gap="sm">
@@ -360,7 +360,7 @@ export default function SalesReportSection({ refreshKey = 0 }) {
                       <div key={`${item.brand || 'unknown'}-${item.weightClass ?? item.weight_class}`}>
                         <Group justify="space-between" mb={4}>
                           <Group gap="xs">
-                            <Text size="sm" fw={600} className="text-slate-300">
+                            <Text size="sm" fw={600} className="text-slate-500">
                               {mixLabel}
                             </Text>
                           </Group>
@@ -399,12 +399,12 @@ export default function SalesReportSection({ refreshKey = 0 }) {
               </Stack>
             </div>
           </div>
-          <div className="border-b border-slate-100 pb-3 space-y-3"></div>
+          <div className="border-b border-slate-300 pb-3 space-y-3"></div>
           <div>
-            <Title order={4} mb="md" className="text-white">
+            <Title order={4} mb="md" className="text-slate-700">
               Brand Sales Metric Volume Distribution
             </Title>
-            <Card padding="md" radius="md" className="bg-gradient-to-br from-blue-900 to-red-900">
+            <Card padding="md" radius="md" className="bg-white border border-slate-200 shadow-md">
               {brandMetrics.length === 0 ? (
                 <Text size="sm" c="dimmed">
                   No sales data for the selected period.
@@ -414,12 +414,12 @@ export default function SalesReportSection({ refreshKey = 0 }) {
                   {brandMetrics.map((item, index) => (
                     <div key={item.brand} className="space-y-1.5">
                       <div className="flex items-center justify-between text-sm">
-                        <span className="font-bold text-slate-100">
+                        <span className="font-bold text-slate-500">
                           {item.brand}
                         </span>
-                        <span className="text-slate-200">
+                        <span className="text-slate-400">
                           {item.total_items_sold} items ·{" "}
-                          <span className="font-bold text-slate-300">
+                          <span className="font-bold text-slate-400">
                             {item.percentage}%
                           </span>
                         </span>

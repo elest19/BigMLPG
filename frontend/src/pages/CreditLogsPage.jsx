@@ -92,52 +92,48 @@ function CreditDetailModal({ saleId, readOnly, onClose, onSettled }) {
           <p className="text-sm text-slate-500 text-center py-6">Loading...</p>
         ) : (
           <div className="space-y-4">
-            <dl className="text-sm space-y-2 bg-gradient-to-b from-blue-800 to-red-800 p-4 rounded-xl">
+            <dl className="text-sm space-y-2 bg-white border border-slate-200 shadow-md p-4 rounded-xl">
               <div className="flex justify-between">
-                <dt className="text-slate-100">
+                <dt className="text-slate-600">
                   Customer Name
                 </dt>
-                <dd className="text-slate-300 font-semibold">
+                <dd className="text-slate-500 font-semibold">
                   {summary.customer_name}
                 </dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-slate-100">Phone Number</dt>
-                <dd className="text-slate-300">{summary.phone_number || '-'}</dd>
+                <dt className="text-slate-600">Product Details</dt>
+                <dd className="text-slate-500 text-right">{summary.product_details || '-'}</dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-slate-100">Product Details</dt>
-                <dd className="text-slate-300">{summary.product_details || '-'}</dd>
+                <dt className="text-slate-600">Total Cost</dt>
+                <dd className="text-slate-500 font-bold">{formatCurrency(summary.total_cost)}</dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-slate-100">Total Cost</dt>
-                <dd className="text-slate-300 font-bold">{formatCurrency(summary.total_cost)}</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="text-slate-100">Total Paid</dt>
+                <dt className="text-slate-600">Total Paid</dt>
                 <dd className="font-bold text-emerald-600">{formatCurrency(summary.total_paid)}</dd>
               </div>
               <div className="flex justify-between border-t pt-2">
-                <dt className="font-bold text-slate-100">Remaining Credit</dt>
+                <dt className="font-bold text-slate-600">Remaining Credit</dt>
                 <dd className="font-black text-red-600">{formatCurrency(summary.remaining_credit)}</dd>
               </div>
             </dl>
 
             <div>
-              <h3 className="text-xs font-bold uppercase text-slate-100 mb-2">Payment History</h3>
-              <div className="overflow-x-auto  bg-gradient-to-b from-blue-800 to-red-800 p-4 rounded-xl">
+              <h3 className="text-xs font-bold uppercase text-slate-800 mb-2">Payment History</h3>
+              <div className="overflow-x-auto bg-white border border-slate-200 shadow-md p-4 rounded-xl">
                 <table className="w-full text-left text-xs">
-                  <thead className="text-slate-500 font-bold uppercase">
+                  <thead className="text-slate-800 font-bold uppercase border-b">
                     <tr>
-                      <th className="p-3 text-white">Date Paid</th>
-                      <th className="p-3 text-white text-right">Payment</th>
+                      <th className="p-3 text-slate-800">Date Paid</th>
+                      <th className="p-3 text-slate-800 text-right">Payment</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-300">
                     {summary.payment_history.map((row) => (
                       <tr key={row.credit_id}>
-                        <td className="p-3 text-slate-300">{new Date(row.date_paid).toLocaleString('en-PH')}</td>
-                        <td className="p-3 text-slate-300 text-right font-bold">{row.balance_paid === 0 ? "Sale Created" : formatCurrency(row.balance_paid)}</td>
+                        <td className="p-3 text-slate-600">{new Date(row.date_paid).toLocaleString('en-PH')}</td>
+                        <td className="p-3 text-slate-600 text-right font-bold">{row.balance_paid === 0 ? "Sale Created" : formatCurrency(row.balance_paid)}</td>
                       </tr>
                     ))}
                     {summary.payment_history.length === 0 && (
@@ -151,7 +147,7 @@ function CreditDetailModal({ saleId, readOnly, onClose, onSettled }) {
             {!readOnly && summary.remaining_credit > 0 && (
               <div className="space-y-3 border-t pt-4">
                 <div>
-                  <label htmlFor="amount-to-pay" className="block text-xs font-bold uppercase text-slate-100 mb-1">Amount To Pay Now</label>
+                  <label htmlFor="amount-to-pay" className="block text-xs font-bold uppercase text-slate-600 mb-1">Amount To Pay Now</label>
                   <input
                     id="amount-to-pay"
                     type="number"
@@ -193,19 +189,19 @@ function CreditDetailModal({ saleId, readOnly, onClose, onSettled }) {
         >
           <dl className="text-sm space-y-2">
             <div className="flex justify-between">
-              <dt className="text-slate-100">Customer Name</dt>
-              <dd className="text-slate-300 font-semibold">{summary.customer_name}</dd>
+              <dt className="text-slate-800">Customer Name</dt>
+              <dd className="text-slate-500 font-semibold">{summary.customer_name}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-200">Amount Being Paid</dt>
+              <dt className="text-slate-800">Amount Being Paid</dt>
               <dd className="font-bold text-red-600">{formatCurrency(confirmSettlement.amount)}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-200">Remaining Before Payment</dt>
-              <dd className="text-slate-300 font-bold">{formatCurrency(confirmSettlement.remainingBefore)}</dd>
+              <dt className="text-slate-800">Remaining Before Payment</dt>
+              <dd className="text-slate-500 font-bold">{formatCurrency(confirmSettlement.remainingBefore)}</dd>
             </div>
             <div className="flex justify-between border-t pt-2">
-              <dt className="text-white font-bold">Remaining After Payment</dt>
+              <dt className="text-slate-800 font-bold">Remaining After Payment</dt>
               <dd className="text-green-600 font-black">{formatCurrency(confirmSettlement.remainingAfter)}</dd>
             </div>
           </dl>
@@ -339,17 +335,17 @@ export default function CreditLogsPage() {
   if (loading && !credits.length) return <LoadingSpinner />;
 
   return (
-    <div className="bg-gradient-to-br from-blue-800 to-red-800 p-6 rounded-xl shadow-sm space-y-4">
-      <div className="border-b border-slate-100 pb-4">
+    <div className="bg-white border-slate-200 p-6 rounded-xl shadow-md space-y-4">
+      <div className="border-b border-slate-300 pb-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold text-white">Credit List</h2>
+          <h2 className="text-lg font-bold text-black">Credit List</h2>
           <button type="button" onClick={() => setDownloadOpen(true)} className="bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs px-4 py-2.5 rounded-xl">Download Credit Log</button>
         </div>
         <p className="text-xs text-slate-400 mt-1">Track outstanding balances, installment payments, and customer credit status</p>
       </div>
 
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5 border-b pb-4">
-        <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+        <label className="text-xs font-bold uppercase tracking-wider text-slate-600">
           <span className="mb-1 block">Customer</span>
           <input
             type="text"
@@ -359,7 +355,7 @@ export default function CreditLogsPage() {
             className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
           />
         </label>
-        <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+        <label className="text-xs font-bold uppercase tracking-wider text-slate-600">
           <span className="mb-1 block">Date</span>
           <input
             type="date"
@@ -368,7 +364,7 @@ export default function CreditLogsPage() {
             className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
           />
         </label>
-        <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+        <label className="text-xs font-bold uppercase tracking-wider text-slate-600">
           <span className="mb-1 block">Credit Status</span>
           <select
             value={statusFilter}
@@ -380,7 +376,7 @@ export default function CreditLogsPage() {
             <option value="paid">Paid</option>
           </select>
         </label>
-          <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+          <label className="text-xs font-bold uppercase tracking-wider text-slate-600">
             <span className="mb-1 block">Brand</span>
             <select
               value={brandFilter}
@@ -393,7 +389,7 @@ export default function CreditLogsPage() {
               ))}
             </select>
           </label>
-          <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+          <label className="text-xs font-bold uppercase tracking-wider text-slate-600">
             <span className="mb-1 block">Weight Class</span>
             <select
               value={weightClassFilter}
@@ -415,11 +411,11 @@ export default function CreditLogsPage() {
               key={row.sale_id}
               type="button"
               onClick={() => openCreditDetails(row)}
-              className="w-full rounded-xl bg-gradient-to-b from-blue-900 to-red-900 hover:from-blue-800 hover:to-red-800 p-3 text-left shadow-sm"
+              className="w-full rounded-xl bg-white border border-slate-200 p-3 text-left shadow-md"
             >
               <div className="flex items-center justify-between gap-3">
-                <span className="font-bold text-slate-200">{row.customer_name}</span>
-                <span className="ml-auto text-right text-[11px] font-black text-slate-300">{row.sale_quantity} pcs - {row.brand}{row.weight_class ? ` (${String(row.weight_class).replace(/\.00$/, '')}kg)` : ''}</span>
+                <span className="font-bold text-slate-800">{row.customer_name}</span>
+                <span className="ml-auto text-right text-[11px] font-black text-slate-600">{row.sale_quantity} pcs - {row.brand}{row.weight_class ? ` (${String(row.weight_class).replace(/\.00$/, '')}kg)` : ''}</span>
               </div>
               <div className="flex items-center justify-between gap-3">
                 <span className="ml-auto text-right font-black text-red-600">{formatCurrency(row.remaining_credit)}
@@ -434,9 +430,9 @@ export default function CreditLogsPage() {
           )}
         </div>      
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-slate-200 shadow-sm">
-          <table className="w-full min-w-[900px] text-left text-xs sm:text-sm whitespace-nowrap">
-            <thead className="bg-gradient-to-b from-blue-700 to-red-700 text-slate-100 font-bold uppercase tracking-wider">
+        <div className="overflow-x-auto rounded-xl border border-slate-200 shadow-md">
+          <table className="w-full min-w-[900px] text-left text-xs sm:text-sm whitespace-nowrap border border-slate-200 shadow-md">
+            <thead className="bg-red-600 border-b text-slate-100 font-bold uppercase tracking-wider">
               <tr>
                 <th className="p-3 text-center">Customer Name</th>
                 <th className="p-3 text-center">Qty</th>
@@ -496,7 +492,7 @@ export default function CreditLogsPage() {
             type="button"
             onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
             disabled={page <= 1}
-            className="rounded-xl bg-gradient-to-b from-blue-600 to-red-600 hover:from-blue-700 hover:to-red-700 px-3 py-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-xl bg-slate-600 hover:bg-slate-700 px-3 py-2 text-black disabled:cursor-not-allowed disabled:opacity-50"
           >
             Previous
           </button>
@@ -507,7 +503,7 @@ export default function CreditLogsPage() {
             type="button"
             onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
             disabled={page >= totalPages}
-            className="rounded-xl bg-gradient-to-b from-blue-600 to-red-600 hover:from-blue-700 hover:to-red-700 px-3 py-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-xl bg-slate-600 hover:bg-slate-700 px-3 py-2 text-black disabled:cursor-not-allowed disabled:opacity-50"
           >
             Next
           </button>

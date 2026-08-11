@@ -4,10 +4,6 @@ import { api } from '../api/client';
 
 const FALLBACK_BRANDS = ['Regasco', 'Seagas', 'Pryce'];
 
-// Searchable dropdown with free-text entry for LPG brands.
-// Existing brands are suggested; typing a brand name that doesn't exist yet
-// is allowed, and the backend registers it automatically (case-insensitive,
-// trimmed) the next time it's used to create/update a product or sale.
 export default function BrandAutocomplete({
   value,
   onChange,
@@ -21,8 +17,20 @@ export default function BrandAutocomplete({
   useEffect(() => {
     api
       .getBrands()
-      .then((res) => setBrands(Array.isArray(res.data) ? res.data : []))
-      .catch(() => setBrands([]));
+      .then((res) => {
+        const fetchedBrands = Array.isArray(res.data)
+          ? res.data
+          : [];
+
+        setBrands(
+          fetchedBrands.length > 0
+            ? fetchedBrands
+            : FALLBACK_BRANDS
+        );
+      })
+      .catch(() => {
+        setBrands(FALLBACK_BRANDS);
+      });
   }, []);
 
   return (
@@ -33,10 +41,10 @@ export default function BrandAutocomplete({
       data={brands}
       value={value}
       onChange={onChange}
-      limit={10}
       withAsterisk={required}
-      classNames={{
-        label: 'text-[11px] font-bold uppercase text-slate-500 mb-1',
+      comboboxProps={{
+        withinPortal: true,
+        zIndex: 1000,
       }}
     />
   );

@@ -3,6 +3,6 @@
 @tailwind utilities;
 
 body {
-  @apply bg-gray-900 text-slate-700 antialiased;
+  @apply bg-slate-100 text-slate-700 antialiased;
 }
 

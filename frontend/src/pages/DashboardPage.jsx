@@ -57,7 +57,7 @@ export default function DashboardPage() {
         ]);
         setMetrics(metricsRes.data);
         setRecentSales(salesRes.data);
-        setPagination(salesRes.pagination);
+        setPagination(salesRes.pagination || { page: 1, totalPages: 1 });
         setDailyExpenses(expensesRes.data || []);
       } catch (err) {
         showToast("Load Failed", err.message, "error");
@@ -73,20 +73,21 @@ export default function DashboardPage() {
   }, [loadData]);
 
   useEffect(() => {
+    const currentPage = pagination?.page || 1;
     const unsubscribeInventory = subscribeRealtime("inventory:changed", () => {
-      loadData(pagination.page);
+      loadData(currentPage);
       setReportRefreshKey((k) => k + 1);
     });
     const unsubscribeSales = subscribeRealtime("sales:changed", () => {
-      loadData(pagination.page);
+      loadData(currentPage);
       setReportRefreshKey((k) => k + 1);
     });
     const unsubscribeExpenses = subscribeRealtime("expenses:changed", () => {
-      loadData(pagination.page);
+      loadData(currentPage);
       setReportRefreshKey((k) => k + 1);
     });
     const unsubscribeCredits = subscribeRealtime("credits:changed", () => {
-      loadData(pagination.page);
+      loadData(currentPage);
       setReportRefreshKey((k) => k + 1);
     });
 
@@ -96,15 +97,15 @@ export default function DashboardPage() {
       unsubscribeExpenses();
       unsubscribeCredits();
     };
-  }, [loadData, pagination.page]);
+  }, [loadData, pagination]);
 
   const handleSaleSuccess = () => {
-    loadData(pagination.page);
+    loadData(pagination?.page || 1);
     setReportRefreshKey((k) => k + 1);
   };
 
   const handleExpenseSuccess = () => {
-    loadData(pagination.page);
+    loadData(pagination?.page || 1);
     setReportRefreshKey((k) => k + 1);
   };
 
@@ -210,27 +211,27 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <article className="bg-gradient-to-b from-blue-900 to-red-900 p-5 rounded-xl shadow-sm">
-          <p className="text-xs font-bold text-slate-200 uppercase tracking-wider">
+        <article className="bg-white border border-slate-300 p-5 rounded-xl shadow-md">
+          <p className="text-xs font-bold text-black uppercase tracking-wider">
             Total Items Sold
           </p>
-          <p className="text-2xl font-bold text-slate-100 mt-1">
+          <p className="text-2xl font-bold text-slate-600 mt-1">
             {metrics?.totalItemsSold || 0} Items
           </p>
         </article>
-        <article className="bg-gradient-to-b from-blue-900 to-red-900 p-5 rounded-xl shadow-sm">
-          <p className="text-xs font-bold text-slate-200 uppercase tracking-wider">
+        <article className="bg-white border border-slate-300 p-5 rounded-xl shadow-md">
+          <p className="text-xs font-bold text-black uppercase tracking-wider">
             Total Filled Stock
           </p>
-          <p className="text-2xl font-bold text-slate-100 mt-1">
+          <p className="text-2xl font-bold text-slate-600 mt-1">
             {metrics?.totalFilledStock || 0} Tanks
           </p>
         </article>
-        <article className="bg-gradient-to-b from-blue-900 to-red-900 p-5 rounded-xl shadow-sm">
-          <p className="text-xs font-bold text-slate-200 uppercase tracking-wider">
+        <article className="bg-white border border-slate-300 p-5 rounded-xl shadow-md">
+          <p className="text-xs font-bold text-black uppercase tracking-wider">
             Total Empty Stock
           </p>
-          <p className="text-2xl font-bold text-slate-100 mt-1">
+          <p className="text-2xl font-bold text-slate-600 mt-1">
             {metrics?.totalEmptyStock || 0} Cylinders
           </p>
         </article>
@@ -239,12 +240,12 @@ export default function DashboardPage() {
       <BrandInventoryOverview refreshKey={reportRefreshKey} />
 
       <div
-        className="bg-gradient-to-b from-red-600 to-slate-700 border border-red-900 rounded-2xl p-5 shadow-sm"
+        className="bg-red-100 border border-red-500 rounded-2xl p-5 shadow-sm"
         role="alert"
       >
           <div>
             <div className="flex w-full items-center justify-between gap-2">
-              <h1 className="text-md font-black uppercase tracking-wider text-white">
+              <h1 className="text-md font-black uppercase tracking-wider text-black">
                 Low Stock Reminder
               </h1>
 
@@ -351,11 +352,11 @@ export default function DashboardPage() {
 
       {isAdministrator && <SalesReportSection refreshKey={reportRefreshKey} />}
 
-      <div className="bg-gradient-to-br from-blue-900 to-red-900 p-6 rounded-xl shadow-sm space-y-4">
-        <div className="border-b border-slate-100 pb-3 space-y-3">
+      <div className="bg-white border border-slate-300 p-6 rounded-xl shadow-md space-y-4">
+        <div className="pb-3 space-y-3">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h2 className="text-lg font-bold text-white">Expenses</h2>
+              <h2 className="text-lg font-bold text-black">Expenses</h2>
               <p className="text-xs text-slate-400">
                 Filter expenses by date range and review the activity list.
               </p>
@@ -402,13 +403,13 @@ export default function DashboardPage() {
                 key={item.expenses_id}
                 type="button"
                 onClick={() => openExpenseDetails(item)}
-                className="w-full rounded-xl bg-gradient-to-br from-blue-800 to-red-800 p-3 text-left shadow-sm hover:from-blue-700 hover:to-red-700"
+                className="w-full rounded-xl bg-white border border-slate-200 p-3 text-left shadow-md hover:bg-slate-100"
               >
                 <div className="flex items-center justify-between gap-3">
-                  <span className="font-bold text-slate-100">{item.expenses}</span>
+                  <span className="font-bold text-slate-800">{item.expenses}</span>
                   <span className="font-black text-red-600">{formatCurrency(item.amount)}</span>
                 </div>
-                <p className="mt-2 text-[11px] text-slate-300">{formatDateLocale(item.date)}</p>
+                <p className="mt-2 text-[11px] text-slate-500">{formatDateLocale(item.date)}</p>
               </button>
             ))}
             {dailyExpenses.length === 0 && (
@@ -418,9 +419,9 @@ export default function DashboardPage() {
             )}
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-xl">
-            <table className="w-full min-w-[520px] text-left text-xs whitespace-nowrap">
-              <thead className="bg-gradient-to-b from-blue-800 to-red-800 text-slate-100 font-bold uppercase tracking-wide">
+          <div className="overflow-x-auto p-2">
+            <table className="w-full min-w-[520px] text-left text-xs whitespace-nowrap border border-slate-200 shadow-md">
+              <thead className="bg-red-600 text-white font-bold uppercase tracking-wide">
                 <tr>
                   <th className="p-3 text-center">Expense</th>
                   <th className="p-3 text-center">Amount</th>
@@ -434,7 +435,7 @@ export default function DashboardPage() {
                 {dailyExpenses.map((item) => (
                   <tr
                     key={item.expenses_id}
-                    className="odd:bg-white even:bg-slate-50/95 hover:bg-slate-100/80 transition-colors"
+                    className="odd:bg-white even:bg-slate-100/95 hover:bg-slate-200/80 transition-colors"
                   >
                     <td className="p-3 font-bold text-slate-800 text-center">
                       {item.expenses}
@@ -481,19 +482,19 @@ export default function DashboardPage() {
         )}
       </div>
 
-      <div className="bg-gradient-to-br from-blue-900 to-red-900 p-6 rounded-xl shadow-sm space-y-4">
+      <div className="bg-white border border-slate-300 p-6 rounded-xl shadow-md space-y-4">
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
           <div>
-            <h2 className="text-lg font-bold text-white">
+            <h2 className="text-lg font-bold text-black">
               Recent Sales Entries
             </h2>
-            <p className="text-xs text-slate-300">
+            <p className="text-xs text-slate-400">
               Today&apos;s sales
             </p>
           </div>
           <Link
             to="/sales-log"
-            className="text-xs font-bold text-slate-100 hover:underline"
+            className="text-xs font-bold text-blue-600 hover:underline"
           >
             View Full Log &rarr;
           </Link>
@@ -507,13 +508,13 @@ export default function DashboardPage() {
                   key={`${sale.entry_type}-${sale.sale_id}-${sale.log_date}`}
                   type="button"
                   onClick={() => openSaleDetails(sale)}
-                  className="w-full rounded-xl bg-gradient-to-br from-blue-800 to-red-800 p-3 text-left shadow-sm hover:from-blue-700 hover:to-red-700"
+                  className="w-full rounded-xl bg-white border border-slate-200 p-3 text-left shadow-md hover:bg-slate-100"
                 >
                   <div className="flex items-center justify-between gap-3">
-                    <span className="font-bold text-slate-200">{sale.customer_name}</span>
+                    <span className="font-bold text-slate-800">{sale.customer_name}</span>
                     <span className="font-black text-red-600">{entrySummary.balancePaidLabel}</span>
                   </div>
-                  <p className="mt-2 text-[11px] text-slate-300">
+                  <p className="mt-2 text-[11px] text-slate-400">
                     {sale.brand} - {sale.weight_class}kg - {sale.product_status}
                   </p>
                 </button>
@@ -526,9 +527,9 @@ export default function DashboardPage() {
             )}
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-xl">
-            <table className="w-full min-w-[720px] text-left text-xs whitespace-nowrap">
-              <thead className="bg-gradient-to-b from-blue-700 to-red-700 text-slate-100 font-bold uppercase tracking-wide">
+          <div className="overflow-x-auto p-3">
+            <table className="w-full min-w-[720px] text-left text-xs whitespace-nowrap border border-slate-200 shadow-md">
+              <thead className="bg-blue-600 text-slate-100 font-bold uppercase tracking-wide">
                 <tr>
                   <th className="p-3">Customer</th>
                   <th className="p-3">Product</th>
@@ -543,7 +544,7 @@ export default function DashboardPage() {
                   return (
                     <tr
                       key={`${sale.entry_type}-${sale.sale_id}-${sale.log_date}`}
-                      className="odd:bg-white even:bg-slate-50/95 hover:bg-slate-100/80 transition-colors"
+                      className="odd:bg-white even:bg-slate-100/95 hover:bg-slate-200/80 transition-colors"
                     >
                       <td className="p-3 font-bold text-slate-800">
                         {sale.customer_name}
@@ -581,7 +582,7 @@ export default function DashboardPage() {
               type="button"
               disabled={pagination.page <= 1}
               onClick={() => loadData(pagination.page - 1)}
-              className="px-3 py-1 rounded-lg bg-gradient-to-b from-blue-600 to-red-600 hover:from-blue-700 hover:to-red-700 text-white text-xs font-bold disabled:opacity-50"
+              className="px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold disabled:opacity-50"
             >
               Previous
             </button>
@@ -592,7 +593,7 @@ export default function DashboardPage() {
               type="button"
               disabled={pagination.page >= pagination.totalPages}
               onClick={() => loadData(pagination.page + 1)}
-              className="px-3 py-1 rounded-lg bg-gradient-to-b from-blue-600 to-red-600 hover:from-blue-700 hover:to-red-700 text-white text-xs font-bold disabled:opacity-50"
+              className="px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold disabled:opacity-50"
             >
               Next
             </button>
@@ -630,7 +631,7 @@ export default function DashboardPage() {
               <button
                 type="button"
                 onClick={() => setExpenseDeleteTarget(null)}
-                className="px-4 py-2 rounded-xl bg-red-600 text-sm font-bold"
+                className="px-4 py-2 rounded-xl bg-red-600 text-white text-sm font-bold"
               >
                 Cancel
               </button>
@@ -645,7 +646,7 @@ export default function DashboardPage() {
             </>
           }
         >
-          <p className="text-sm text-slate-200">
+          <p className="text-sm text-slate-600">
             Permanently delete the{" "}
             <strong>{expenseDeleteTarget.expenses}</strong> expense of{" "}
             {formatCurrency(expenseDeleteTarget.amount)}?

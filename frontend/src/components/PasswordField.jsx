@@ -22,7 +22,7 @@ export function MaskedPasswordField({ label = 'Password', id = 'password-view' }
 
   return (
     <div>
-      <label htmlFor={id} className="block text-xs font-bold text-slate-200 uppercase tracking-wide mb-1">
+      <label htmlFor={id} className="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">
         {label}
       </label>
       <div className="relative">
@@ -90,7 +90,7 @@ export default function PasswordField({
 export function ProfileField({ label, value, htmlFor, children }) {
   return (
     <div>
-      <label htmlFor={htmlFor} className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">
+      <label htmlFor={htmlFor} className="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">
         {label}
       </label>
       {children || (

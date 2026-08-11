@@ -122,7 +122,7 @@ export default function RecordExpenseModal({
               limit={10}
               withAsterisk
               classNames={{
-                label: "text-[11px] font-bold uppercase text-slate-100 mb-1",
+                label: "text-[11px] font-bold uppercase text-slate-800 mb-1 ",
               }}
             />
           </div>
@@ -130,7 +130,7 @@ export default function RecordExpenseModal({
           <div>
             <label
               htmlFor="expense-amount"
-              className="block text-[11px] font-bold uppercase text-slate-100 mb-1"
+              className="block text-[11px] font-bold uppercase text-slate-800 mb-1"
             >
               Amount
             </label>
@@ -144,7 +144,7 @@ export default function RecordExpenseModal({
               onKeyDown={(e) => {
                 if (e.key === "-" || e.key === "e") e.preventDefault();
               }}
-              className="w-full text-sm p-2.5 border border-slate-200 rounded-xl"
+              className="w-full text-sm p-2.5 border border-slate-200 rounded-md"
               placeholder="0.00"
               required
             />
@@ -153,7 +153,7 @@ export default function RecordExpenseModal({
           <div>
             <label
               htmlFor="expense-date"
-              className="block text-[11px] font-bold uppercase text-slate-50 mb-1"
+              className="block text-[11px] font-bold uppercase text-slate-800 mb-1"
             >
               Date
             </label>
@@ -208,21 +208,19 @@ export default function RecordExpenseModal({
             </>
           }
         >
-          <dl className="text-sm space-y-2">
-            <div className="flex justify-between">
-              <dt className="text-white">Expense</dt>
-              <dd className="font-semibold text-slate-300">{confirmData.expenses}</dd>
-            </div>
-            <div className="flex justify-between">
-              <dt className="text-white">Amount</dt>
-              <dd className="font-semibold text-red-600">
-                {formatCurrency(confirmData.amount)}
-              </dd>
-            </div>
-            <div className="flex justify-between">
-              <dt className="text-white">Date</dt>
-              <dd className="font-semibold text-slate-300">{formatDisplayDate(confirmData.date)}</dd>
-            </div>
+          <dl className="w-full text-sm space-y-2 text-left"> 
+            <div className="flex items-start justify-start gap-2"> 
+              <dt className="text-slate-800">Expense: </dt> 
+              <dd className="font-semibold text-slate-400">{confirmData.expenses}</dd> 
+            </div> 
+            <div className="flex items-start justify-start gap-2"> 
+              <dt className="text-slate-800">Amount: </dt> 
+              <dd className="font-semibold text-red-600">{formatCurrency(confirmData.amount)}</dd> 
+            </div> 
+            <div className="flex items-start justify-start gap-2"> 
+              <dt className="text-slate-800">Date: </dt> 
+              <dd className="font-semibold text-slate-400"> {formatDisplayDate(confirmData.date)}</dd>
+            </div> 
           </dl>
         </Modal>
       )}

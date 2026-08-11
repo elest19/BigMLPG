@@ -46,16 +46,16 @@ export default function BrandInventoryOverview({ refreshKey = 0 }) {
   }, [loadData]);
 
   return (
-    <section className="bg-gradient-to-b from-blue-900 to-red-900 p-5 rounded-xl shadow-sm space-y-4" aria-label="Inventory Brand Overview">
+    <section className="bg-white border border-slate-300 p-5 rounded-xl shadow-md space-y-4" aria-label="Inventory Brand Overview">
       <div className="border-b border-slate-300  pb-2 flex items-start justify-between gap-3">
         <div>
-          <h2 className="text-base font-bold text-slate-200">Inventory Brand Overview</h2>
-          <p className="text-xs text-slate-300">Inventory Stock Summary</p>
+          <h2 className="text-base font-bold text-black">Inventory Brand Overview</h2>
+          <p className="text-xs text-slate-400">Inventory Stock Summary</p>
         </div>
         <button
           type="button"
           onClick={() => setIsExpanded((value) => !value)}
-          className="inline-flex items-center gap-2 rounded-lg bg-slate-300 px-3 py-2 text-xs font-bold text-slate-700"
+          className="inline-flex items-center gap-2 rounded-lg bg-slate-100 border border-slate-300 px-3 py-2 text-xs font-bold text-slate-700"
           aria-expanded={isExpanded}
           aria-label={isExpanded ? 'Collapse inventory brand overview' : 'Expand inventory brand overview'}
         >
@@ -67,7 +67,7 @@ export default function BrandInventoryOverview({ refreshKey = 0 }) {
         {loading && !overview.length ? (
           <p className="text-xs text-slate-300 italic py-2">Loading brand overview...</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-3">
             {brands.map((brand) => {
               const data = overview.find((b) => b.brand === brand) || {
                 total_filled: 0,
@@ -75,25 +75,25 @@ export default function BrandInventoryOverview({ refreshKey = 0 }) {
                 total_combined: 0,
               };
               return (
-                <article key={brand} className="rounded-2xl p-3 bg-gradient-to-br from-blue-800 to-red-800 shadow-sm">
+                <article key={brand} className="rounded-2xl p-5 bg-slate-100 border border-slate-200 shadow-md">
                   <div className="flex items-center gap-2 mb-3">
                     <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-blue-300 text-blue-700 text-xs font-black" aria-hidden="true">
                       {brand.slice(0, 2).toUpperCase()}
                     </span>
-                    <h3 className="text-sm font-black text-white">{brand}</h3>
+                    <h3 className="text-sm font-black text-black">{brand}</h3>
                   </div>
                   <dl className="space-y-2 text-xs">
                     <div className="flex justify-between">
-                      <dt className="text-slate-100 font-semibold">Total Filled Tanks</dt>
-                      <dd className="font-bold text-indigo-100">{data.total_filled}</dd>
+                      <dt className="text-slate-700 font-semibold">Total Filled Tanks</dt>
+                      <dd className="font-bold text-slate-700">{data.total_filled}</dd>
                     </div>
                     <div className="flex justify-between">
-                      <dt className="text-slate-100 font-semibold">Total Empty Cylinders</dt>
-                      <dd className="font-bold text-slate-100">{data.total_empty}</dd>
+                      <dt className="text-slate-700 font-semibold">Total Empty Cylinders</dt>
+                      <dd className="font-bold text-slate-700">{data.total_empty}</dd>
                     </div>
-                    <div className="flex justify-between border-t border-slate-200 pt-2">
-                      <dt className="text-slate-100 font-bold">Total Combined</dt>
-                      <dd className="font-black text-slate-200">{data.total_combined}</dd>
+                    <div className="flex justify-between border-t border-slate-600 pt-2">
+                      <dt className="text-slate-700 font-bold">Total Combined</dt>
+                      <dd className="font-bold text-slate-700">{data.total_combined}</dd>
                     </div>
                   </dl>
                 </article>

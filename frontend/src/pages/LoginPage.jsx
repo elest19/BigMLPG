@@ -32,9 +32,9 @@ export default function LoginPage() {
   const subtitle = 'Sign in to manage inventory and sales';
 
   return (
-  <div className="min-h-screen w-full bg-gray-900 flex items-center justify-center px-4 py-6">
+  <div className="min-h-screen w-full bg-white flex items-center justify-center px-4 py-6">
     <div className="w-full max-w-md">
-      <div className="bg-gradient-to-br from-blue-900 to-red-900 rounded-2xl shadow-lg p-6 sm:p-8">
+      <div className="bg-white border border-slate-200 rounded-2xl shadow-lg p-6 sm:p-8">
         <img
           src={Logo}
           alt="BigMLPG Logo"
@@ -45,7 +45,7 @@ export default function LoginPage() {
           className="h-20 w-20 sm:h-24 sm:w-24 mx-auto object-contain rounded-xl border border-slate-100"
         />
 
-        <h1 className="mt-4 text-center text-xl sm:text-2xl font-bold text-slate-300">
+        <h1 className="mt-4 text-center text-xl sm:text-2xl font-bold text-slate-800">
           BigM LPG Inventory
         </h1>
 

@@ -99,25 +99,25 @@ function InventoryTable({
             key={p.product_id}
             type="button"
             onClick={() => onView?.(p)}
-            className="w-full rounded-xl border border-slate-200 bg-gradient-to-br from-blue-800 to-red-800 p-3 text-left shadow-sm hover:from-blue-700 hover:to-red-700 transition-colors"
+            className="w-full rounded-xl border border-slate-200 bg-white p-3 text-left shadow-sm hover:bg-slate-200"
           >
             <div className="flex items-center justify-between">
-              <span className="text-sm font-bold text-slate-100">Stock</span>
-              <span className="font-black text-slate-200">{p.stock_quantity}</span>
+              <span className="text-sm font-bold text-slate-600">Stock</span>
+              <span className="font-black text-slate-500">{p.stock_quantity}</span>
             </div>
-            <div className="mt-2 flex items-center justify-between text-[11px] text-slate-300">
+            <div className="mt-2 flex items-center justify-between text-[11px] text-slate-500">
               <span>Date Created</span>
               <span>{new Date(p.created_at).toLocaleDateString()}</span>
             </div>
-            <div className="mt-2 flex items-center justify-between text-[11px] text-slate-300">
+            <div className="mt-2 flex items-center justify-between text-[11px] text-slate-500">
               <span>Original Price</span>
               <span>{formatCurrency(p.initial_price)}</span>
             </div>
-            <div className="mt-2 flex items-center justify-between text-[11px] text-slate-300">
+            <div className="mt-2 flex items-center justify-between text-[11px] text-slate-500">
               <span>Consumer Price</span>
               <span>{formatCurrency(p.regular_retail)}</span>
             </div>
-            <div className="mt-2 flex items-center justify-between text-[11px] text-slate-300">
+            <div className="mt-2 flex items-center justify-between text-[11px] text-slate-500">
               <span>Retail Price</span>
               <span>{formatCurrency(p.wholesale_price)}</span>
             </div>
@@ -128,9 +128,9 @@ function InventoryTable({
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl shadow-sm">
-      <table className="w-full min-w-[900px] text-left text-xs sm:text-sm whitespace-nowrap">
-        <thead className="bg-gradient-to-b from-blue-700 to-red-700 text-slate-100 font-bold uppercase tracking-wider">
+    <div className="overflow-x-auto p-3">
+      <table className="w-full min-w-[900px] text-left text-xs rounded-xl border border-slate-200 shadow-md sm:text-sm whitespace-nowrap">
+        <thead className="bg-blue-600 border border-slate-200 shadow-md text-slate-100 font-bold uppercase tracking-wider">
           <tr>
             <th className="p-3">Status</th>
             <th className="p-3 text-center">Stock</th>
@@ -445,9 +445,9 @@ export default function InventoryPage() {
 
     return (
       <>
-        <div className="space-y-4 bg-gradient-to-b from-blue-900 to-red-900 rounded-xl p-4 shadow-sm">
+        <div className="space-y-4 bg-white border border-slate-200 rounded-xl p-4 shadow-md">
           <div className="border-b border-slate-200 pb-2">
-            <h4 className="text-sm font-black text-white uppercase tracking-wide">
+            <h4 className="text-sm font-black text-black uppercase tracking-wide">
               {title}
             </h4>
           </div>
@@ -457,9 +457,9 @@ export default function InventoryPage() {
               .map(([weightClass, weightProducts]) => (
                 <div
                   key={`${title}-${weightClass}`}
-                  className="rounded-xl shadow-sm overflow-hidden"
+                  className="overflow-hidden"
                 >
-                  <h5 className="text-xs font-bold uppercase text-slate-100 tracking-wider px-3 py-2">
+                  <h5 className="text-xs font-bold uppercase text-slate-600 tracking-wider px-3 py-2">
                     Weight - {weightClass} kg
                   </h5>
                   <div className="p-2 sm:p-3">
@@ -488,18 +488,18 @@ export default function InventoryPage() {
     <div className="space-y-6">
       <BrandInventoryOverview refreshKey={inventoryRefreshKey} />
 
-      <section className="bg-gradient-to-b from-blue-900 to-red-900 p-5 rounded-xl  shadow-sm space-y-4">
-        <div className="border-b border-slate-100 pb-2">
-          <h2 className="text-base font-bold text-white">
+      <section className="bg-white border border-slate-300 p-5 rounded-xl shadow-md space-y-4">
+        <div className="border-b border-slate-300 pb-2">
+          <h2 className="text-base font-bold text-black">
             Quick Catalog Interactive Filters
           </h2>
-          <p className="text-xs text-slate-300">All filters work together</p>
+          <p className="text-xs text-slate-400">All filters work together</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label
               htmlFor="brand-filter"
-              className="block text-[11px] font-bold uppercase text-slate-100 mb-1"
+              className="block text-[11px] font-bold uppercase text-slate-600 mb-1"
             >
               Brand
             </label>
@@ -520,7 +520,7 @@ export default function InventoryPage() {
           <div>
             <label
               htmlFor="condition-filter"
-              className="block text-[11px] font-bold uppercase text-slate-100 mb-1"
+              className="block text-[11px] font-bold uppercase text-slate-600 mb-1"
             >
               Tank Condition
             </label>
@@ -538,7 +538,7 @@ export default function InventoryPage() {
           <div>
             <label
               htmlFor="stock-filter"
-              className="block text-[11px] font-bold uppercase text-slate-100 mb-1"
+              className="block text-[11px] font-bold uppercase text-slate-600 mb-1"
             >
               Live Stock Warning Tier
             </label>
@@ -558,9 +558,9 @@ export default function InventoryPage() {
       </section>
 
       
-      <section className="shadow-sm pt-5">
-          <div className="flex items-center justify-between bg-red-900 rounded-t-xl p-4 shadow-sm">
-              <h2 className="text-lg font-bold text-white">
+      <section className="shadow-sm border border-slate-300 rounded-xl bg-white">
+          <div className="flex items-center justify-between bg-white rounded-t-xl p-4 shadow-sm">
+              <h2 className="text-lg font-bold text-black">
                 Inventory Holdings
               </h2>
             {isAdministrator && (
@@ -573,15 +573,15 @@ export default function InventoryPage() {
               </button>
             )}
           </div>
-          <div className="border-b border-slate-500"></div>
+          <div className="border-b border-slate-400"></div>
         {brands.map((brand) => {
           const { filled, empty } = groupedByBrand[brand];
           if (!filled.length && !empty.length) return null;
 
           return (
-            <div key={brand} className="space-y-4 bg-gradient-to-b from-blue-950 to-red-950 rounded-b-xl p-4 shadow-sm">
+            <div key={brand} className="space-y-4 bg-white rounded-b-xl p-4 shadow-sm">
               <div className="flex items-center justify-between border-b border-slate-200 p-2">
-                <h3 className="text-base font-black text-white border-l-4 border-blue-600 pl-3">
+                <h3 className="text-base font-black text-black border-l-4 border-blue-600 pl-3">
                   {brand}
                 </h3>
                 <div className="space-y-4h-2 w-2 rounded-full bg-blue-500" />
@@ -590,7 +590,6 @@ export default function InventoryPage() {
                 {filled.length > 0 && renderInventorySection("Filled Tank", filled)}
                 {empty.length > 0 && renderInventorySection("Empty Cylinder", empty)}
               </div>
-               
             </div>
           );
         })}
@@ -944,7 +943,7 @@ export default function InventoryPage() {
             </>
           }
         >
-          <p className="text-sm text-slate-200">
+          <p className="text-sm text-slate-600">
             Permanently delete product{" "}
             <strong>{deleteTarget.product_id}</strong> ({deleteTarget.brand}{" "}
             {deleteTarget.weight_class}kg)? This action cannot be undone.

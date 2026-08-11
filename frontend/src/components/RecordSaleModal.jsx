@@ -163,42 +163,42 @@ export default function RecordSaleModal({ open, onClose, onSuccess }) {
         >
           <dl className="text-sm space-y-2">
             <div className="flex justify-between">
-              <dt className="text-slate-100">Customer</dt>
-              <dd className="font-semibold text-slate-300">{confirmSale.customerName}</dd>
+              <dt className="text-slate-600">Customer</dt>
+              <dd className="font-semibold text-slate-400">{confirmSale.customerName}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-100">Location</dt>
-              <dd className="text-slate-300">{confirmSale.location || "-"}</dd>
+              <dt className="text-slate-600 ">Location</dt>
+              <dd className="text-slate-400">{confirmSale.location || "-"}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-100">Phone</dt>
-              <dd className="text-slate-300">{confirmSale.phoneNumber || "-"}</dd>
+              <dt className="text-slate-600">Phone</dt>
+              <dd className="text-slate-400">{confirmSale.phoneNumber || "-"}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-100">Price Type</dt>
-              <dd className="text-slate-300">{confirmSale.priceType}</dd>
+              <dt className="text-slate-600">Price Type</dt>
+              <dd className="text-slate-400">{confirmSale.priceType}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-100">Payment Method</dt>
-              <dd className="text-slate-300">{confirmSale.paymentMethod}</dd>
+              <dt className="text-slate-600">Payment Method</dt>
+              <dd className="text-slate-400">{confirmSale.paymentMethod}</dd>
             </div>
             {confirmSale.paymentMethod === "Credit" && (
               <div className="flex justify-between">
-                <dt className="text-slate-100">Initial Payment</dt>
-                <dd className="text-slate-300">{formatCurrency(confirmSale.initialPayment || 0)}</dd>
+                <dt className="text-slate-600">Initial Payment</dt>
+                <dd className="text-slate-400">{formatCurrency(confirmSale.initialPayment || 0)}</dd>
               </div>
             )}
             <div className="flex justify-between">
-              <dt className="text-slate-100">Product</dt>
-              <dd className="text-slate-300">{confirmSale.productLabel}</dd>
+              <dt className="text-slate-600">Product</dt>
+              <dd className="text-slate-400">{confirmSale.productLabel}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-100">Quantity</dt>
-              <dd className="text-slate-300">{confirmSale.quantity}</dd>
+              <dt className="text-slate-600">Quantity</dt>
+              <dd className="text-slate-400">{confirmSale.quantity}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-100">Tank Type</dt>
-              <dd className="text-slate-300">
+              <dt className="text-slate-600">Tank Type</dt>
+              <dd className="text-slate-400">
                 {confirmSale.purchaseTank
                   ? "Purchase Tank"
                   : confirmSale.isFilled
@@ -207,17 +207,17 @@ export default function RecordSaleModal({ open, onClose, onSuccess }) {
               </dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-100">Customer LPG (Empty Returned)</dt>
-              <dd className="font-semibold text-slate-300">
+              <dt className="text-slate-600">Customer LPG (Empty Returned)</dt>
+              <dd className="font-semibold text-slate-400">
                 {confirmSale.lpgTankVariant || "N/A"}
               </dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-100">Unit Price</dt>
-              <dd className="text-slate-300">{formatCurrency(confirmSale.unitPrice)}</dd>
+              <dt className="text-slate-600">Unit Price</dt>
+              <dd className="text-slate-400">{formatCurrency(confirmSale.unitPrice)}</dd>
             </div>
             <div className="flex justify-between border-t pt-2">
-              <dt className="font-bold text-slate-100">Total</dt>
+              <dt className="font-bold text-slate-600">Total</dt>
               <dd className="font-black text-blue-600">
                 {formatCurrency(confirmSale.total)}
               </dd>

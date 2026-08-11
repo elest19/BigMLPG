@@ -411,10 +411,10 @@ export default function SalesLogPage() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-b from-blue-950 to-red-950 p-6 rounded-xl *: shadow-sm space-y-5">
-        <div className="border-b border-slate-100 pb-4 space-y-4">
+      <div className="bg-white border border-slate-300 p-6 rounded-xl shadow-md space-y-5">
+        <div className="border-b border-slate-300 pb-4 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <h2 className="text-lg font-bold text-white">
+            <h2 className="text-lg font-bold text-black">
               Sales Log Table
             </h2>
             {isAdministrator && (
@@ -489,7 +489,7 @@ export default function SalesLogPage() {
             )}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 flex-1">
               <label className="text-[11px] font-bold uppercase tracking-wider">
-                <span className="mb-1 block text-slate-200">Customer</span>
+                <span className="mb-1 block text-slate-600">Customer</span>
                 <input
                   type="text"
                   value={customerNameFilter}
@@ -499,7 +499,7 @@ export default function SalesLogPage() {
                 />
               </label>
               <label className="text-[11px] font-bold uppercase tracking-wider">
-                <span className="mb-1 block text-slate-200">Date</span>
+                <span className="mb-1 block text-slate-600">Date</span>
                 <input
                   type="date"
                   value={dateFilter}
@@ -508,7 +508,7 @@ export default function SalesLogPage() {
                 />
               </label>
               <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                    <span className="mb-1 block text-slate-200">Brand</span>
+                    <span className="mb-1 block text-slate-600">Brand</span>
                     <select
                       value={brandFilter}
                       onChange={(e) => setBrandFilter(e.target.value)}
@@ -523,7 +523,7 @@ export default function SalesLogPage() {
                     </select>
                   </label>
                   <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                    <span className="mb-1 block text-slate-200">Weight Class</span>
+                    <span className="mb-1 block text-slate-600">Weight Class</span>
                     <select
                       value={weightClassFilter}
                       onChange={(e) => setWeightClassFilter(e.target.value)}
@@ -586,12 +586,12 @@ export default function SalesLogPage() {
                     key={`${sale.entry_type}-${sale.sale_id}-${sale.log_date}`}
                     type="button"
                     onClick={() => openSaleDetails(sale)}
-                    className="w-full rounded-xl bg-gradient-to-b from-blue-900 to-red-900 hover:from-blue-800 hover:to-red-800 p-3 text-left shadow-sm"
+                    className="w-full rounded-xl bg-white border border-slate-200 p-3 text-left shadow-md"
                   >
                       <>
                       <div className="flex items-center justify-between gap-3">
-                        <span className="font-bold text-slate-200">{sale.customer_name}</span>
-                        <span className="ml-auto text-[11px] text-slate-300 text-right">
+                        <span className="font-bold text-slate-600">{sale.customer_name}</span>
+                        <span className="ml-auto text-[11px] text-slate-500 text-right">
                           {sale.sale_quantity} pcs - {sale.brand} ({sale.weight_class}kg)
                         </span>
                       </div>
@@ -612,9 +612,9 @@ export default function SalesLogPage() {
             )}
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-xl shadow-sm mt-2">
-            <table className="w-full min-w-[1100px] text-left text-xs sm:text-sm whitespace-nowrap">
-              <thead className="bg-gradient-to-b from-blue-700 to-red-700 text-slate-100 font-bold uppercase tracking-wider">
+          <div className="overflow-x-auto rounded-xl shadow-md">
+            <table className="w-full min-w-[1100px] text-left text-xs sm:text-sm whitespace-nowrap border border-slate-200 ">
+              <thead className="bg-blue-600 text-slate-100 font-bold uppercase tracking-wider border-b">
                 <tr>
                   {[
                     { key: "log_date", label: "Log Date", align: "text-left" },
@@ -658,7 +658,7 @@ export default function SalesLogPage() {
                           : "odd:bg-white even:bg-slate-50/95 hover:bg-slate-100/80 transition-colors"
                       }
                     >
-                      <td className="p-3">
+                      <td className="p-3 ">
                         {formatDateLocale(sale.log_date || sale.date_created || sale.date_paid)}
                       </td>
                       <td className="p-3">
@@ -703,7 +703,7 @@ export default function SalesLogPage() {
                                 onClick={() => setSelectedSaleId(sale.sale_id)}
                                 className="text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white hover:text-slate-200 px-2 py-1 rounded-lg"
                               >
-                                Override
+                                Edit
                               </button>   
                             </>
                           )}
@@ -724,7 +724,7 @@ export default function SalesLogPage() {
                                 }}
                                 className="text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white hover:text-slate-200 px-2 py-1 rounded-lg"
                               >
-                                Override
+                                Edit
                               </button>   
                             </>
                           )}
@@ -754,7 +754,7 @@ export default function SalesLogPage() {
               type="button"
               onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
               disabled={page <= 1}
-              className="rounded-xl bg-gradient-to-b from-blue-600 to-red-600 hover:from-blue-700 hover:to-red-700 px-3 py-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-xl bg-white hover:bg-slate-100 px-3 py-2 text-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
             >
               Previous
             </button>
@@ -765,7 +765,7 @@ export default function SalesLogPage() {
               type="button"
               onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={page >= totalPages}
-              className="rounded-xl bg-gradient-to-b from-blue-600 to-red-600 hover:from-blue-700 hover:to-red-700 px-3 py-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-xl bg-white hover:bg-slate-100 px-3 py-2 text-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
             >
               Next
             </button>
@@ -806,7 +806,7 @@ export default function SalesLogPage() {
               </>
             }
           >
-            <p className="text-sm text-slate-200">
+            <p className="text-sm text-slate-600">
               Permanently delete this sale for{" "}
               <strong>{deleteTarget.customer_name}</strong>? Stock will be
               restored and all payment records will be removed.
@@ -878,7 +878,7 @@ export default function SalesLogPage() {
               </>
             }
           >
-            <p className="text-sm text-slate-200">
+            <p className="text-sm text-slate-600">
               Delete <strong>{expenseDeleteTarget.expenses}</strong> expense of {" "}
               <strong>{formatCurrency(expenseDeleteTarget.amount)}</strong>?
             </p>
@@ -909,7 +909,7 @@ export default function SalesLogPage() {
               </>
             }
           >
-            <p className="text-sm text-slate-200">
+            <p className="text-sm text-slate-600">
               Delete this payment record for <strong>{paymentDeleteTarget.customer_name}</strong>? The sale itself will remain unchanged and remaining credit will be recalculated.
             </p>
           </Modal>
@@ -933,152 +933,152 @@ export default function SalesLogPage() {
           <DownloadSalesLogModal onClose={() => setDownloadModalOpen(false)} />
         )}
       </div>
-    <div className="bg-gradient-to-t from-blue-900 to-red-900 rounded-xl shadow-sm p-5 sm:p-6 space-y-4">
-      <section className="rounded-xl sm:p-1 space-y-3">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <h3 className="text-sm font-bold text-white">Expense Overview</h3>
-            <p className="text-[11px] text-slate-300">
-              Review expenses for the selected time period.
-            </p>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-2">
-            <select
-              value={expenseFilter}
-              onChange={(e) => setExpenseFilter(e.target.value)}
-              className="text-xs p-2.5 border border-slate-200 rounded-xl"
-            >
-              <option value="today">Today</option>
-              <option value="week">This Week</option>
-              <option value="month">This Month</option>
-              <option value="first_half">First Half (Jan-Jun)</option>
-              <option value="second_half">Second Half (Jul-Dec)</option>
-              <option value="year">This Year</option>
-              <option value="custom">Custom Date Range</option>
-            </select>
-            {expenseFilter === "custom" && (
-              <div className="flex gap-2">
-                <input
-                  type="date"
-                  value={expenseStartDate}
-                  onChange={(e) => setExpenseStartDate(e.target.value)}
-                  className="text-xs p-2.5 border border-slate-200 rounded-xl"
-                />
-                <input
-                  type="date"
-                  value={expenseEndDate}
-                  onChange={(e) => setExpenseEndDate(e.target.value)}
-                  className="text-xs p-2.5 border border-slate-200 rounded-xl"
-                />
-              </div>
-            )}
-          </div>
-        </div>
-        {isMobile ? (
-          <div className="space-y-2">
-            {expenses.map((item) => (
-              <div
-                key={item.expenses_id}
-                className="rounded-xl bg-gradient-to-b from-blue-700 to-red-700 p-3 shadow-sm"
-              >
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <p className="text-[10px] font-bold uppercase tracking-wide text-slate-100">Expense</p>
-                    <p className="mt-1 font-bold text-slate-200">{item.expenses}</p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-bold uppercase tracking-wide text-slate-100">Amount</p>
-                    <p className="mt-1 font-black text-red-600">{formatCurrency(item.amount)}</p>
-                  </div>
-                </div>
-                <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-2 text-[11px] text-slate-300">
-                  <span>{formatDateLocale(item.date)}</span>
-                  {isAdministrator && (
-                    <div className="flex gap-2">
-                      <button
-                        type="button"
-                        onClick={() => openExpenseEditor(item)}
-                        className="rounded-lg bg-blue-600 px-2.5 py-1 text-xs font-bold text-white"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setExpenseDeleteTarget(item)}
-                        className="rounded-lg bg-red-50 px-2.5 py-1 text-xs font-bold text-red-600"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-            {expenses.length === 0 && (
-              <p className="rounded-xl border border-dashed border-slate-200 p-4 text-center text-sm text-slate-400">
-                No expenses recorded for the selected period.
+      <div className="bg-white border border-slate-300 rounded-xl shadow-md p-5 sm:p-6 space-y-4">
+        <section className="rounded-xl sm:p-1 space-y-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h3 className="text-md font-bold text-black">Expense Overview</h3>
+              <p className="text-[11px] text-slate-400">
+                Review expenses for the selected time period.
               </p>
-            )}
+            </div>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <select
+                value={expenseFilter}
+                onChange={(e) => setExpenseFilter(e.target.value)}
+                className="text-xs p-2.5 border border-slate-200 rounded-xl"
+              >
+                <option value="today">Today</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+                <option value="first_half">First Half (Jan-Jun)</option>
+                <option value="second_half">Second Half (Jul-Dec)</option>
+                <option value="year">This Year</option>
+                <option value="custom">Custom Date Range</option>
+              </select>
+              {expenseFilter === "custom" && (
+                <div className="flex gap-2">
+                  <input
+                    type="date"
+                    value={expenseStartDate}
+                    onChange={(e) => setExpenseStartDate(e.target.value)}
+                    className="text-xs p-2.5 border border-slate-200 rounded-xl"
+                  />
+                  <input
+                    type="date"
+                    value={expenseEndDate}
+                    onChange={(e) => setExpenseEndDate(e.target.value)}
+                    className="text-xs p-2.5 border border-slate-200 rounded-xl"
+                  />
+                </div>
+              )}
+            </div>
           </div>
-        ) : (
-          <div className="overflow-x-auto rounded-xl shadow-sm">
-            <table className="w-full min-w-[480px] text-left text-xs whitespace-nowrap">
-              <thead className="bg-gradient-to-b from-blue-800 to-red-800 text-slate-100 font-bold uppercase tracking-wide">
-                <tr>
-                  <th className="p-3 text-center">Expense</th>
-                  <th className="p-3 text-center">Amount</th>
-                  <th className="p-3 text-center">Date</th>
-                  {isAdministrator && <th className="p-3 text-center">Actions</th>}
-                </tr>
-              </thead>
-              <tbody className="font-medium text-slate-600">
-                {expenses.map((item) => (
-                  <tr
-                    key={item.expenses_id}
-                    className="odd:bg-white even:bg-slate-50/95 hover:bg-slate-100/80 transition-colors"
-                  >
-                    <td className="p-3 font-bold text-slate-800 text-center">
-                      {item.expenses}
-                    </td>
-                    <td className="p-3 text-red-600 font-bold text-center">
-                      {formatCurrency(item.amount)}
-                    </td>
-                    <td className="p-3 text-center">
-                      {formatDateLocale(item.date)}
-                    </td>
+          {isMobile ? (
+            <div className="space-y-2">
+              {expenses.map((item) => (
+                <div
+                  key={item.expenses_id}
+                  className="rounded-xl bg-white border border-slate-200 shadow-md p-3 "
+                >
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-wide text-slate-600">Expense</p>
+                      <p className="mt-1 font-bold text-slate-600">{item.expenses}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-wide text-slate-600">Amount</p>
+                      <p className="mt-1 font-black text-red-600">{formatCurrency(item.amount)}</p>
+                    </div>
+                  </div>
+                  <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-2 text-[11px] text-slate-400">
+                    <span>{formatDateLocale(item.date)}</span>
                     {isAdministrator && (
-                      <td className="p-3 text-center space-x-1">
-                        <button
-                          type="button"
-                          onClick={() => openExpenseEditor(item)}
-                          className="text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 px-2.5 py-1 rounded-lg"
-                        >
-                          Edit
-                        </button>
+                      <div className="flex gap-2">
                         <button
                           type="button"
                           onClick={() => setExpenseDeleteTarget(item)}
-                          className="text-xs font-bold bg-red-50 text-red-600 hover:bg-red-600 hover:text-white px-2.5 py-1 rounded-lg"
+                          className="rounded-lg bg-red-50 px-2.5 py-1 text-xs font-bold text-red-600"
                         >
                           Delete
                         </button>
-                      </td>
+                        <button
+                          type="button"
+                          onClick={() => openExpenseEditor(item)}
+                          className="rounded-lg bg-blue-600 px-2.5 py-1 text-xs font-bold text-white"
+                        >
+                          Edit
+                        </button>
+                      </div>
                     )}
-                  </tr>
-                ))}
-                {expenses.length === 0 && (
+                  </div>
+                </div>
+              ))}
+              {expenses.length === 0 && (
+                <p className="rounded-xl border border-dashed border-slate-200 p-4 text-center text-sm text-slate-400">
+                  No expenses recorded for the selected period.
+                </p>
+              )}
+            </div>
+          ) : (
+            <div className="overflow-x-auto rounded-xl shadow-md">
+              <table className="w-full min-w-[480px] text-left text-xs whitespace-nowrap">
+                <thead className="bg-red-600 border border-slate-200 shadow-md text-slate-100 font-bold uppercase tracking-wide">
                   <tr>
-                    <td colSpan={4} className="text-center py-4 text-slate-400">
-                      No expenses recorded for the selected period.
-                    </td>
+                    <th className="p-3 text-center">Expense</th>
+                    <th className="p-3 text-center">Amount</th>
+                    <th className="p-3 text-center">Date</th>
+                    {isAdministrator && <th className="p-3 text-center">Actions</th>}
                   </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </section>
+                </thead>
+                <tbody className="font-medium text-slate-600">
+                  {expenses.map((item) => (
+                    <tr
+                      key={item.expenses_id}
+                      className="odd:bg-white even:bg-slate-50/95 hover:bg-slate-100/80 transition-colors"
+                    >
+                      <td className="p-3 font-bold text-slate-800 text-center">
+                        {item.expenses}
+                      </td>
+                      <td className="p-3 text-red-600 font-bold text-center">
+                        {formatCurrency(item.amount)}
+                      </td>
+                      <td className="p-3 text-center">
+                        {formatDateLocale(item.date)}
+                      </td>
+                      {isAdministrator && (
+                        <td className="p-3 text-center space-x-1">
+                          <button
+                            type="button"
+                            onClick={() => setExpenseDeleteTarget(item)}
+                            className="text-xs font-bold bg-red-50 text-red-600 hover:bg-red-600 hover:text-white px-2.5 py-1 rounded-lg"
+                          >
+                            Delete
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => openExpenseEditor(item)}
+                            className="text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 px-2.5 py-1 rounded-lg"
+                          >
+                            Edit
+                          </button>
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                  {expenses.length === 0 && (
+                    <tr>
+                      <td colSpan={4} className="text-center py-4 text-slate-400">
+                        No expenses recorded for the selected period.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
+      </div>
     </div>
-  </div>
   );
 }

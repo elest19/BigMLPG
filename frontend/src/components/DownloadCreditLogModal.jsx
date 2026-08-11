@@ -88,12 +88,12 @@ export default function DownloadCreditLogModal({ onClose }) {
         </>
       )}
     >
-      <p className="text-xs text-slate-300">Export the credit register to PDF for the selected period.</p>
+      <p className="text-xs text-slate-400">Export the credit register to PDF for the selected period.</p>
 
       <fieldset className="space-y-2">
         <legend className="sr-only">Report period</legend>
         {PERIODS.map((item) => (
-          <label key={item.value} className="flex items-center gap-2 text-sm text-slate-100">
+          <label key={item.value} className="flex items-center gap-2 text-sm text-slate-600">
             <input
               type="radio"
               name="credit-log-period"

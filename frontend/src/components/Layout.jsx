@@ -9,8 +9,8 @@ import Logo from "../../BigMLPG.jpg";
 const navClass = ({ isActive }) =>
   `px-4 py-2.5 text-sm rounded-xl transition ${
     isActive
-      ? "font-bold text-white text-blue bg-gradient-to-br from-blue-800 to-red-800"
-      : "font-semibold text-slate-100 hover:text-slate-200 hover:bg-gradient-to-br from-blue-700 to-red-700"
+      ? "font-bold bg-blue-500 text-white"
+      : "font-semibold hover:text-white hover:bg-blue-600/90"
   }`;
 
 export default function Layout({ children }) {
@@ -38,7 +38,7 @@ export default function Layout({ children }) {
 
   return (
     <div className="min-h-full flex flex-col">
-      <header className="sticky top-0 z-40 w-full bg-gray-900 border-b border-slate-200 shadow-sm">
+      <header className="sticky top-0 z-40 w-full bg-white border-b border-slate-500 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-24 items-center justify-between gap-4">
             <div className="flex items-center space-x-4">
@@ -51,10 +51,10 @@ export default function Layout({ children }) {
                 className="h-16 w-16 object-contain rounded-xl shadow-sm border border-slate-100"
               />
               <div>
-                <span className="block text-lg font-bold text-slate-100 tracking-tight leading-none">
+                <span className="block text-lg font-bold tracking-tight leading-none">
                   BigMLPG
                 </span>
-                <span className="text-[11px] text-red-600 font-bold tracking-wider uppercase mt-1.5 block">
+                <span className="text-[11px] text-blue-600 font-bold tracking-wider uppercase mt-1.5 block">
                   System Management
                 </span>
               </div>
@@ -88,7 +88,7 @@ export default function Layout({ children }) {
                 <button
                   type="button"
                   onClick={() => setProfileOpen(true)}
-                  className="bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold text-xs px-3 py-2.5 rounded-xl transition"
+                  className="bg-slate-100 hover:text-white hover:bg-slate-800/90 font-bold text-xs px-3 py-2.5 rounded-xl transition"
                   aria-label="Open profile"
                 >
                   Profile
@@ -105,7 +105,7 @@ export default function Layout({ children }) {
 
             <button
               type="button"
-              className="xl:hidden text-slate-200 p-2 rounded-xl"
+              className="xl:hidden p-2 rounded-xl hover:text-slate-400"
               aria-label="Toggle menu"
               aria-expanded={mobileOpen}
               onClick={() => setMobileOpen((v) => !v)}
@@ -138,9 +138,9 @@ export default function Layout({ children }) {
             />
           )}
           <div
-            className={`fixed top-0 right-0 z-50 flex h-full w-72 max-w-[85vw] flex-col bg-gradient-to-br from-blue-900 to-red-900 shadow-2xl transition-transform duration-300 ${mobileOpen ? "translate-x-0" : "translate-x-full"}`}
+            className={`fixed top-0 right-0 z-50 flex h-full w-72 max-w-[85vw] flex-col bg-slate-100 shadow-2xl transition-transform duration-300 ${mobileOpen ? "translate-x-0" : "translate-x-full"}`}
           >
-            <div className="flex items-center justify-between border-b border-slate-600 px-4 py-4">
+            <div className="flex items-center justify-between border-b border-slate-800 px-4 py-4">
               <div className="flex items-center gap-3">
                 <img
                   src={Logo}
@@ -151,13 +151,13 @@ export default function Layout({ children }) {
                   className="h-10 w-10 rounded-xl border border-slate-100 object-contain"
                 />
                 <div>
-                  <p className="text-sm font-black text-slate-200">BigMLPG</p>
-                  <p className="text-xs text-red-600 font-bold">System Management</p>
+                  <p className="text-sm font-black">BigMLPG</p>
+                  <p className="text-xs text-blue-600 font-bold">System Management</p>
                 </div>
               </div>
               <button
                 type="button"
-                className="rounded-lg p-2 text-slate-200 hover:text-blue-600"
+                className="rounded-lg p-2 text-black hover:text-slate-500"
                 aria-label="Close menu"
                 onClick={() => setMobileOpen(false)}
               >
@@ -172,22 +172,22 @@ export default function Layout({ children }) {
                 className={({ isActive }) =>
                   `block rounded-xl px-3 py-2.5 text-sm transition-colors ${
                     isActive
-                      ? "font-bold bg-gradient-to-br from-blue-700 to-red-700 text-slate-100"
-                      : "text-slate-300 hover:bg-gradient-to-br hover:from-blue-600 hover:to-red-600 hover:text-slate-100"
+                      ? "font-bold text-white bg-blue-600"
+                      : "font-semibold hover:text-white hover:bg-blue-600/90"
                   }`
                 }
                 onClick={() => setMobileOpen(false)}
               >
                 Dashboard & Sales
               </NavLink>
-
+                
               <NavLink
                 to="/inventory"
                 className={({ isActive }) =>
                   `block rounded-xl px-3 py-2.5 text-sm transition-colors ${
                     isActive
-                      ? "font-bold bg-gradient-to-br from-blue-700 to-red-700 text-slate-100"
-                      : "text-slate-300 hover:bg-gradient-to-br hover:from-blue-600 hover:to-red-600 hover:text-slate-100"
+                      ? "font-bold text-white bg-blue-600"
+                      : "font-semibold hover:text-white hover:bg-blue-600/90"
                   }`
                 }
                 onClick={() => setMobileOpen(false)}
@@ -200,8 +200,8 @@ export default function Layout({ children }) {
                 className={({ isActive }) =>
                   `block rounded-xl px-3 py-2.5 text-sm transition-colors ${
                     isActive
-                      ? "font-bold bg-gradient-to-br from-blue-700 to-red-700 text-slate-100"
-                      : "text-slate-300 hover:bg-gradient-to-br hover:from-blue-600 hover:to-red-600 hover:text-slate-100"
+                      ? "font-bold text-white bg-blue-600"
+                      : "font-semibold hover:text-white hover:bg-blue-600/90 "
                   }`
                 }
                 onClick={() => setMobileOpen(false)}
@@ -214,8 +214,8 @@ export default function Layout({ children }) {
                 className={({ isActive }) =>
                   `block rounded-xl px-3 py-2.5 text-sm transition-colors ${
                     isActive
-                      ? "font-bold bg-gradient-to-br from-blue-700 to-red-700 text-slate-100"
-                      : "text-slate-300 hover:bg-gradient-to-br hover:from-blue-600 hover:to-red-600 hover:text-slate-100"
+                      ? "font-bold text-white bg-blue-600"
+                      : "font-semibold hover:text-white hover:bg-blue-600/90 "
                   }`
                 }
                 onClick={() => setMobileOpen(false)}
@@ -229,8 +229,8 @@ export default function Layout({ children }) {
                   className={({ isActive }) =>
                     `block rounded-xl px-3 py-2.5 text-sm transition-colors ${
                       isActive
-                        ? "font-bold bg-gradient-to-br from-blue-700 to-red-700 text-slate-100"
-                        : "text-slate-300 hover:bg-gradient-to-br hover:from-blue-600 hover:to-red-600 hover:text-slate-100"
+                        ? "font-bold text-white bg-blue-600"
+                        : "font-semibold hover:text-white hover:bg-blue-600/90"
                     }`
                   }
                   onClick={() => setMobileOpen(false)}
@@ -246,13 +246,13 @@ export default function Layout({ children }) {
                     setProfileOpen(true);
                     setMobileOpen(false);
                   }}
-                  className="block w-full rounded-xl px-3 py-2.5 text-left text-sm text-slate-300 hover:bg-gradient-to-br hover:from-blue-600 hover:to-red-600 hover:text-slate-100"
+                  className="block w-full px-3 py-2.5 border-t border-slate-300 text-left text-sm font-bold hover:text-white hover:bg-slate-800/90 hover:rounded-xl transition"
                 >
                   Profile
                 </button>
               )}
             </nav>
-            <div className="border-t border-slate-600 p-4">
+            <div className="border-t border-slate-500 p-4">
               <button
                 type="button"
                 onClick={handleLogout}
@@ -269,7 +269,7 @@ export default function Layout({ children }) {
         {children}
       </main>
 
-      <footer className="bg-gray-900 border-t border-slate-200 py-4 mt-auto text-center text-xs text-slate-200 font-medium">
+      <footer className="bg-white border-t border-slate-600 py-4 mt-auto text-center text-xs font-medium shadow-sm">
         <p>
           &copy; {new Date().getFullYear()} BigMLPG System. All rights reserved.
         </p>
@@ -296,14 +296,14 @@ export default function Layout({ children }) {
       {helpOpen && (
         <Modal title="User Manual" onClose={() => setHelpOpen(false)} size="xl">
           <div className="space-y-5 ">
-            <Text size="sm" className="text-slate-300">
+            <Text size="sm" className="text-slate-400">
               Use this guide to understand day-to-day operations, reports, inventory behavior, and role-based access.
             </Text>
 
             <Accordion multiple defaultValue={['sales', 'inventory']}>
               <Accordion.Item value="sales">
                 <Accordion.Control 
-                className="text-slate-100" 
+                className="text-slate-700" 
                 styles={{
                   control: {
                     backgroundColor: "transparent",
@@ -311,7 +311,7 @@ export default function Layout({ children }) {
                 }}>
                 <label className="font-bold">1. Managing Sales, Expenses, and Credit Payments</label></Accordion.Control>
                 <Accordion.Panel>
-                  <ul className="list-disc space-y-2 pl-5 text-sm text-slate-200">
+                  <ul className="list-disc space-y-2 pl-5 text-sm text-slate-600">
                     <li>Record a new sale from the dashboard or sales workflow.</li>
                     <li>Edit an existing sale from the Customer &amp; Sales Log when details need to be updated.</li>
                     <li>Delete a sale from the admin profile when removal is authorized.</li>
@@ -324,7 +324,7 @@ export default function Layout({ children }) {
 
               <Accordion.Item value="inventory">
                 <Accordion.Control 
-                className="text-slate-100" 
+                className="text-slate-700" 
                 styles={{
                   control: {
                     backgroundColor: "transparent",
@@ -333,7 +333,7 @@ export default function Layout({ children }) {
                 <label className="font-bold">2. Inventory Holdings Logic</label>
                 </Accordion.Control>
                 <Accordion.Panel>
-                  <ul className="list-disc space-y-2 pl-5 text-sm text-slate-200">
+                  <ul className="list-disc space-y-2 pl-5 text-sm text-slate-600">
                     <li>Each sale reduces the matching stock for the sold product.</li>
                     <li>Filled tank stock decreases after a sale, while the customer LPG tank increases the equivalent Empty Cylinder stock.</li>
                     <li>When multiple product entries share the same brand and weight, inventory is matched to the oldest available stock first.</li>
@@ -345,7 +345,7 @@ export default function Layout({ children }) {
 
               <Accordion.Item value="reports">
                 <Accordion.Control 
-                className="text-slate-100" 
+                className="text-slate-700" 
                 styles={{
                   control: {
                     backgroundColor: "transparent",
@@ -353,7 +353,7 @@ export default function Layout({ children }) {
                 }}>
                 <label className="font-bold">3. Download Reports</label></Accordion.Control>
                 <Accordion.Panel>
-                  <ul className="list-disc space-y-2 pl-5 text-sm text-slate-200">
+                  <ul className="list-disc space-y-2 pl-5 text-sm text-slate-600">
                     <li>Download Sales Log PDF to export the customer and sales table for the selected period.</li>
                     <li>Download Credit Log PDF to export outstanding and paid credit activity.</li>
                     <li>Available filters include Daily, Weekly, Monthly, First Half, Second Half, Yearly, and Custom Date Range.</li>
@@ -363,7 +363,7 @@ export default function Layout({ children }) {
 
               <Accordion.Item value="filters">
                 <Accordion.Control 
-                className="text-slate-100" 
+                className="text-slate-700" 
                 styles={{
                   control: {
                     backgroundColor: "transparent",
@@ -371,7 +371,7 @@ export default function Layout({ children }) {
                 }}>
                 <label className="font-bold">4. Table Filters</label></Accordion.Control>
                 <Accordion.Panel>
-                  <ul className="list-disc space-y-2 pl-5 text-sm text-slate-200">
+                  <ul className="list-disc space-y-2 pl-5 text-sm text-slate-600">
                     <li>Customer &amp; Sales Log supports customer, product, brand, weight, and date filters.</li>
                     <li>Credit Logs supports similar filtering for customer activity and payment history.</li>
                     <li>The search field helps locate records quickly by matching common values.</li>
@@ -382,7 +382,7 @@ export default function Layout({ children }) {
 
               <Accordion.Item value="roles">
                 <Accordion.Control 
-                className="text-slate-100" 
+                className="text-slate-700" 
                 styles={{
                   control: {
                     backgroundColor: "transparent",
@@ -390,9 +390,9 @@ export default function Layout({ children }) {
                 }}>
                 <label className="font-bold">5. User Roles</label></Accordion.Control>
                 <Accordion.Panel>
-                  <div className="space-y-3 text-sm text-slate-200">
+                  <div className="space-y-3 text-sm text-slate-600">
                     <div>
-                      <p className="font-semibold text-slate-200">Admin</p>
+                      <p className="font-semibold text-slate-600">Admin</p>
                       <ul className="list-disc space-y-1 pl-5 mt-1">
                         <li>Full system access and administrative control.</li>
                         <li>Manage products, staff accounts, and reports.</li>
@@ -400,7 +400,7 @@ export default function Layout({ children }) {
                       </ul>
                     </div>
                     <div>
-                      <p className="font-semibold text-slate-200">Staff</p>
+                      <p className="font-semibold text-slate-600">Staff</p>
                       <ul className="list-disc space-y-1 pl-5 mt-1">
                         <li>Record sales and manage customer transactions.</li>
                         <li>Manage credit payments and add expenses.</li>
@@ -413,7 +413,7 @@ export default function Layout({ children }) {
 
               <Accordion.Item value="features">
                 <Accordion.Control 
-                className="text-slate-100" 
+                className="text-slate-700" 
                 styles={{
                   control: {
                     backgroundColor: "transparent",
@@ -421,7 +421,7 @@ export default function Layout({ children }) {
                 }}>
                 <label className="font-bold">6. Special Features</label></Accordion.Control>
                 <Accordion.Panel>
-                  <ul className="list-disc space-y-2 pl-5 text-sm text-slate-200">
+                  <ul className="list-disc space-y-2 pl-5 text-sm text-slate-600">
                     <li>Login rate limiting and account protection help reduce unauthorized access.</li>
                     <li>The Delete All Sales feature is available for administrators when a full reset is required.</li>
                     <li>Real-time updates keep sales, expenses, inventory, and credit changes synchronized across the app.</li>
