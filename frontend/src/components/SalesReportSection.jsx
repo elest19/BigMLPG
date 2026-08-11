@@ -133,11 +133,11 @@ function OrdersIcon() {
   );
 }
 
-function MetricCard({ label, value, icon, tone = "text-slate-900", formula }) {
+function MetricCard({ label, value, icon, tone = "text-slate-500", formula }) {
   return (
-    <Card withBorder padding="lg" radius="md" shadow="sm">
+    <Card padding="lg" radius="md" shadow="sm" className="bg-gradient-to-br from-blue-900 to-red-900">
       <Group justify="space-between" align="flex-start" mb="xs">
-        <Text size="xs" c="dimmed" tt="uppercase" fw={700}>
+        <Text size="xs" tt="uppercase" fw={700} className="text-slate-100">
           {label}
         </Text>
         <span
@@ -151,7 +151,7 @@ function MetricCard({ label, value, icon, tone = "text-slate-900", formula }) {
         {value}
       </Text>
       {formula ? (
-        <Text size="xs" c="dimmed" mt={2} className="leading-relaxed">
+        <Text size="xs" mt={2} className="leading-relaxed text-slate-400">
           {formula}
         </Text>
       ) : null}
@@ -162,7 +162,7 @@ function MetricCard({ label, value, icon, tone = "text-slate-900", formula }) {
 function SegmentBlock({ title, items, valueKey = "revenue" }) {
   if (!items?.length) {
     return (
-      <Card withBorder padding="md" radius="md">
+      <Card padding="md" radius="md" >
         <Text fw={700} mb="sm">
           {title}
         </Text>
@@ -174,18 +174,18 @@ function SegmentBlock({ title, items, valueKey = "revenue" }) {
   }
 
   return (
-    <Card withBorder padding="md" radius="md">
-      <Text fw={700} mb="md">
+    <Card padding="md" radius="md" className="bg-gradient-to-br from-blue-900 to-red-900">
+      <Text fw={700} mb="md" className="text-white">
         {title}
       </Text>
       <Stack gap="sm">
         {items.map((item) => (
           <div key={item.label}>
             <Group justify="space-between" mb={4}>
-              <Text size="sm" fw={600}>
+              <Text size="sm" fw={600} className="text-slate-300">
                 {item.label}
               </Text>
-              <Text size="sm" fw={700}>
+              <Text size="sm" fw={700} className="text-red-500">
                 {formatCurrency(item[valueKey])}
               </Text>
             </Group>
@@ -195,7 +195,7 @@ function SegmentBlock({ title, items, valueKey = "revenue" }) {
               radius="xl"
               aria-label={`${item.label} share`}
             />
-            <Text size="xs" c="dimmed" mt={2}>
+            <Text size="xs" mt={2} className="text-slate-400">
               {item.percentage}%
             </Text>
           </div>
@@ -246,28 +246,22 @@ export default function SalesReportSection({ refreshKey = 0 }) {
 
   return (
     <section
-      className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6"
+      className="bg-gradient-to-b from-blue-900 to-red-900 p-6 rounded-xl shadow-sm space-y-6"
       aria-label="Sales Report"
     >
       <div className="border-b border-slate-100 pb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <Title order={3}>Sales Report</Title>
-          <Text size="sm" c="dimmed" mt={4}>
+          <Title order={3} className="text-white">Sales Report</Title>
+          <Text size="sm" mt={4} className="text-slate-400">
             Sales Overview — filter to refresh all widgets
           </Text>
         </div>
-        <button
-          type="button"
-          onClick={() => setDownloadModalOpen(true)}
-          className="bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs px-4 py-2.5 rounded-xl shrink-0"
-        >
-          Download Sales Report
-        </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
         <Select
           label="Quick Filters"
+          className="text-slate-100"
           value={quickFilter}
           onChange={(v) => setQuickFilter(v || "today")}
           data={[
@@ -298,7 +292,7 @@ export default function SalesReportSection({ refreshKey = 0 }) {
         </Text>
       ) : (
         <>
-          <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="md">
+          <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="md" className="mb-4">
             <MetricCard
               label="Total Sales Revenue"
               value={formatCurrency(summary?.totalSalesRevenue ?? summary?.grossIncome)}
@@ -331,7 +325,7 @@ export default function SalesReportSection({ refreshKey = 0 }) {
               label="Remaining Credit Balance"
               value={formatCurrency(summary?.totalCreditBalance)}
               icon={<CreditBalanceIcon />}
-              tone="text-slate-700"
+              tone="text-slate-400"
               formula={summary?.totalCreditBalanceFormula}
             />
             <MetricCard
@@ -344,18 +338,18 @@ export default function SalesReportSection({ refreshKey = 0 }) {
               label="Total Orders"
               value={summary?.totalOrders ?? 0}
               icon={<OrdersIcon />}
-              tone="text-slate-700"
+              tone="text-slate-200"
             />
           </SimpleGrid>
-
+          <div className="border-b border-slate-100 pb-3 space-y-3"></div>
           <div>
-            <Title order={4} mb="md">
+            <Title order={4} mb="md" className="text-white">
               LPG Business Metrics
             </Title>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <Stack gap="md">
-                <Card withBorder padding="md" radius="md">
-                  <Text fw={700} mb="md">
+                <Card padding="md" radius="md" className="bg-gradient-to-br from-blue-900 to-red-900">
+                  <Text fw={700} mb="md" className="text-slate-100">
                     Product & Inventory Mix
                   </Text>
                   <Stack gap="sm">
@@ -366,14 +360,11 @@ export default function SalesReportSection({ refreshKey = 0 }) {
                       <div key={`${item.brand || 'unknown'}-${item.weightClass ?? item.weight_class}`}>
                         <Group justify="space-between" mb={4}>
                           <Group gap="xs">
-                            <Text size="sm" fw={600}>
+                            <Text size="sm" fw={600} className="text-slate-300">
                               {mixLabel}
                             </Text>
-                            <Badge size="sm" variant="light">
-                              {item.unitsSold} units
-                            </Badge>
                           </Group>
-                          <Text size="sm" fw={700}>
+                          <Text size="sm" fw={700} className="text-red-500">
                             {formatCurrency(item.revenue)}
                           </Text>
                         </Group>
@@ -383,9 +374,12 @@ export default function SalesReportSection({ refreshKey = 0 }) {
                           radius="xl"
                           color="red"
                         />
-                        <Text size="xs" c="dimmed" mt={2}>
-                          {item.percentage}% of total units
-                        </Text>
+                        <div className="text-xs text-slate-400 mt-2">
+                          {item.percentage}% of total units&nbsp;
+                          <Badge size="sm" variant="light" className="lowercase">
+                            {item.unitsSold} units
+                          </Badge>
+                        </div>
                       </div>
                       );
                     })}
@@ -405,12 +399,12 @@ export default function SalesReportSection({ refreshKey = 0 }) {
               </Stack>
             </div>
           </div>
-
+          <div className="border-b border-slate-100 pb-3 space-y-3"></div>
           <div>
-            <Title order={4} mb="md">
+            <Title order={4} mb="md" className="text-white">
               Brand Sales Metric Volume Distribution
             </Title>
-            <Card withBorder padding="md" radius="md">
+            <Card padding="md" radius="md" className="bg-gradient-to-br from-blue-900 to-red-900">
               {brandMetrics.length === 0 ? (
                 <Text size="sm" c="dimmed">
                   No sales data for the selected period.
@@ -420,12 +414,12 @@ export default function SalesReportSection({ refreshKey = 0 }) {
                   {brandMetrics.map((item, index) => (
                     <div key={item.brand} className="space-y-1.5">
                       <div className="flex items-center justify-between text-sm">
-                        <span className="font-bold text-slate-800">
+                        <span className="font-bold text-slate-100">
                           {item.brand}
                         </span>
-                        <span className="text-slate-500">
+                        <span className="text-slate-200">
                           {item.total_items_sold} items ·{" "}
-                          <span className="font-bold text-slate-700">
+                          <span className="font-bold text-slate-300">
                             {item.percentage}%
                           </span>
                         </span>
@@ -448,10 +442,6 @@ export default function SalesReportSection({ refreshKey = 0 }) {
             </Card>
           </div>
         </>
-      )}
-
-      {downloadModalOpen && (
-        <DownloadSalesReportModal onClose={() => setDownloadModalOpen(false)} />
       )}
     </section>
   );

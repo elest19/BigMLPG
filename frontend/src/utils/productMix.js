@@ -8,7 +8,7 @@ export function formatProductMixLabel(item) {
       : "";
 
   if (brandValue && weightLabel) {
-    return `${brandValue} - ${weightLabel}`;
+    return `${brandValue} (${weightLabel})`;
   }
 
   return brandValue || weightLabel || "Unknown mix";

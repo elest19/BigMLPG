@@ -122,7 +122,7 @@ export default function RecordExpenseModal({
               limit={10}
               withAsterisk
               classNames={{
-                label: "text-[11px] font-bold uppercase text-slate-500 mb-1",
+                label: "text-[11px] font-bold uppercase text-slate-100 mb-1",
               }}
             />
           </div>
@@ -130,7 +130,7 @@ export default function RecordExpenseModal({
           <div>
             <label
               htmlFor="expense-amount"
-              className="block text-[11px] font-bold uppercase text-slate-500 mb-1"
+              className="block text-[11px] font-bold uppercase text-slate-100 mb-1"
             >
               Amount
             </label>
@@ -153,7 +153,7 @@ export default function RecordExpenseModal({
           <div>
             <label
               htmlFor="expense-date"
-              className="block text-[11px] font-bold uppercase text-slate-500 mb-1"
+              className="block text-[11px] font-bold uppercase text-slate-50 mb-1"
             >
               Date
             </label>
@@ -162,11 +162,11 @@ export default function RecordExpenseModal({
               type="text"
               value={formatDisplayDate(expenseDate)}
               readOnly
-              className="w-full text-sm p-2.5 border border-slate-200 rounded-xl bg-slate-50 text-slate-600 cursor-not-allowed"
+              className="w-full text-sm p-2.5 border border-slate-200 rounded-xl bg-slate-100 text-slate-700 cursor-not-allowed"
             />
           </div>
 
-          <div className="flex justify-end gap-2 pt-2">
+          <div className="flex justify-end gap-2 pt-2 pb-4">
             <button
               type="button"
               onClick={onClose}
@@ -210,18 +210,18 @@ export default function RecordExpenseModal({
         >
           <dl className="text-sm space-y-2">
             <div className="flex justify-between">
-              <dt className="text-slate-500">Expense</dt>
-              <dd className="font-semibold">{confirmData.expenses}</dd>
+              <dt className="text-white">Expense</dt>
+              <dd className="font-semibold text-slate-300">{confirmData.expenses}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-500">Amount</dt>
+              <dt className="text-white">Amount</dt>
               <dd className="font-semibold text-red-600">
                 {formatCurrency(confirmData.amount)}
               </dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-500">Date</dt>
-              <dd>{formatDisplayDate(confirmData.date)}</dd>
+              <dt className="text-white">Date</dt>
+              <dd className="font-semibold text-slate-300">{formatDisplayDate(confirmData.date)}</dd>
             </div>
           </dl>
         </Modal>

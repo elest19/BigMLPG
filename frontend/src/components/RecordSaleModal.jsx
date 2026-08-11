@@ -124,7 +124,7 @@ export default function RecordSaleModal({ open, onClose, onSuccess }) {
     <>
       <Modal title="Record New Sale" onClose={closeAllModals} size="xl">
         {loading ? (
-          <p className="text-sm text-slate-500 text-center py-8">Loading...</p>
+          <p className="text-sm text-blue-500 text-center py-8">Loading...</p>
         ) : (
           <SaleForm
             customers={customers}
@@ -146,7 +146,7 @@ export default function RecordSaleModal({ open, onClose, onSuccess }) {
               <button
                 type="button"
                 onClick={() => setConfirmSale(null)}
-                className="px-4 py-2 rounded-xl bg-slate-100 text-sm font-bold"
+                className="px-4 py-2 rounded-xl bg-red-600 text-white text-sm font-bold"
               >
                 Cancel
               </button>
@@ -163,42 +163,42 @@ export default function RecordSaleModal({ open, onClose, onSuccess }) {
         >
           <dl className="text-sm space-y-2">
             <div className="flex justify-between">
-              <dt className="text-slate-500">Customer</dt>
-              <dd className="font-semibold">{confirmSale.customerName}</dd>
+              <dt className="text-slate-100">Customer</dt>
+              <dd className="font-semibold text-slate-300">{confirmSale.customerName}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-500">Location</dt>
-              <dd>{confirmSale.location || "-"}</dd>
+              <dt className="text-slate-100">Location</dt>
+              <dd className="text-slate-300">{confirmSale.location || "-"}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-500">Phone</dt>
-              <dd>{confirmSale.phoneNumber || "-"}</dd>
+              <dt className="text-slate-100">Phone</dt>
+              <dd className="text-slate-300">{confirmSale.phoneNumber || "-"}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-500">Price Type</dt>
-              <dd>{confirmSale.priceType}</dd>
+              <dt className="text-slate-100">Price Type</dt>
+              <dd className="text-slate-300">{confirmSale.priceType}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-500">Payment Method</dt>
-              <dd>{confirmSale.paymentMethod}</dd>
+              <dt className="text-slate-100">Payment Method</dt>
+              <dd className="text-slate-300">{confirmSale.paymentMethod}</dd>
             </div>
             {confirmSale.paymentMethod === "Credit" && (
               <div className="flex justify-between">
-                <dt className="text-slate-500">Initial Payment</dt>
-                <dd>{formatCurrency(confirmSale.initialPayment || 0)}</dd>
+                <dt className="text-slate-100">Initial Payment</dt>
+                <dd className="text-slate-300">{formatCurrency(confirmSale.initialPayment || 0)}</dd>
               </div>
             )}
             <div className="flex justify-between">
-              <dt className="text-slate-500">Product</dt>
-              <dd>{confirmSale.productLabel}</dd>
+              <dt className="text-slate-100">Product</dt>
+              <dd className="text-slate-300">{confirmSale.productLabel}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-500">Quantity</dt>
-              <dd>{confirmSale.quantity}</dd>
+              <dt className="text-slate-100">Quantity</dt>
+              <dd className="text-slate-300">{confirmSale.quantity}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-500">Tank Type</dt>
-              <dd>
+              <dt className="text-slate-100">Tank Type</dt>
+              <dd className="text-slate-300">
                 {confirmSale.purchaseTank
                   ? "Purchase Tank"
                   : confirmSale.isFilled
@@ -207,17 +207,17 @@ export default function RecordSaleModal({ open, onClose, onSuccess }) {
               </dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-500">Customer LPG (Empty Returned)</dt>
-              <dd className="font-semibold">
+              <dt className="text-slate-100">Customer LPG (Empty Returned)</dt>
+              <dd className="font-semibold text-slate-300">
                 {confirmSale.lpgTankVariant || "N/A"}
               </dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-slate-500">Unit Price</dt>
-              <dd>{formatCurrency(confirmSale.unitPrice)}</dd>
+              <dt className="text-slate-100">Unit Price</dt>
+              <dd className="text-slate-300">{formatCurrency(confirmSale.unitPrice)}</dd>
             </div>
             <div className="flex justify-between border-t pt-2">
-              <dt className="font-bold">Total</dt>
+              <dt className="font-bold text-slate-100">Total</dt>
               <dd className="font-black text-blue-600">
                 {formatCurrency(confirmSale.total)}
               </dd>

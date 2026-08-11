@@ -34,7 +34,7 @@ const authLimiter = rateLimit({
 });
 
 app.get("/api/health", (_req, res) => {
-  res.json({ success: true, message: "RCLPG API is running" });
+  res.json({ success: true, message: "BigMLPG API is running" });
 });
 
 app.use("/api/auth", authLimiter, authRoutes);
@@ -51,5 +51,5 @@ app.use(notFound);
 app.use(errorHandler);
 
 server.listen(env.port, () => {
-  console.log(`RCLPG API listening on port ${env.port}`);
+  console.log(`BigMLPG API listening on port ${env.port}`);
 });

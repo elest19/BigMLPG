@@ -340,6 +340,20 @@ export default function SalesLogPage() {
       ],
       footer: isAdministrator ? (
         <>
+          <button
+            type="button"
+            onClick={() => {
+              setMobileDetail(null);
+              if (isPayment) {
+                setPaymentDeleteTarget(sale);
+              } else {
+                setDeleteTarget(sale);
+              }
+            }}
+            className="rounded-lg bg-red-100 px-3 py-2 text-xs font-bold text-red-600"
+          >
+            Delete
+          </button>
           {!isPayment ? (
             <button
               type="button"
@@ -347,7 +361,7 @@ export default function SalesLogPage() {
                 setMobileDetail(null);
                 setSelectedSaleId(sale.sale_id);
               }}
-              className="rounded-lg bg-slate-100 px-3 py-2 text-xs font-bold text-slate-700"
+              className="rounded-lg bg-blue-600 hover:bg-blue-700 px-3 py-2 text-xs font-bold text-white"
             >
               Override
             </button>
@@ -359,29 +373,34 @@ export default function SalesLogPage() {
                 setPaymentEditTarget(sale);
                 setPaymentAmount(sale.balance_paid || "");
               }}
-              className="rounded-lg bg-slate-100 px-3 py-2 text-xs font-bold text-slate-700"
+              className="rounded-lg bg-blue-600 hover:bg-blue-700 px-3 py-2 text-xs font-bold text-white"
             >
               Override
             </button>
           )}
-          <button
-            type="button"
-            onClick={() => {
-              setMobileDetail(null);
-              if (isPayment) {
-                setPaymentDeleteTarget(sale);
-              } else {
-                setDeleteTarget(sale);
-              }
-            }}
-            className="rounded-lg bg-red-50 px-3 py-2 text-xs font-bold text-red-600"
-          >
-            Delete
-          </button>
         </>
       ) : null,
     });
   };
+
+  function DownloadIcon() {
+    return (
+      <svg
+        className="h-5 w-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+        />
+      </svg>
+    );
+  }
 
   const closeExpenseModal = () => {
     setExpenseModalOpen(false);
@@ -392,28 +411,16 @@ export default function SalesLogPage() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-5">
+      <div className="bg-gradient-to-b from-blue-950 to-red-950 p-6 rounded-xl *: shadow-sm space-y-5">
         <div className="border-b border-slate-100 pb-4 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <h2 className="text-lg font-bold text-slate-900">
-              Customer & Sales Log
+            <h2 className="text-lg font-bold text-white">
+              Sales Log Table
             </h2>
             {isAdministrator && (
-              <div className="flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={() => setDownloadModalOpen(true)}
-                  className="bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs px-5 py-2.5 rounded-xl"
-                >
-                  Download Sales Log
-                </button>
-              </div>
-            )}
-          </div>
-
-          <div className="flex flex-col lg:flex-row lg:items-end gap-3">
-            {isAdministrator && (
-              <div className="flex flex-wrap gap-2 shrink-0">
+            <div className="flex flex-wrap gap-2">
+              {!isMobile ? (
+                <>
                 <button
                   type="button"
                   onClick={() => {
@@ -421,43 +428,87 @@ export default function SalesLogPage() {
                     setExpenseModalOpen(true);
                   }}
                   className="bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl"
-                >
+                  >
                   Add Expenses
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSaleModalOpen(true)}
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl"
+                  >
+                    Record Sale
+                  </button>
+                  <button
+                  type="button"
+                  onClick={() => setDownloadModalOpen(true)}
+                  className="bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs px-5 py-2.5 rounded-xl"
+                >
+                  Download Sales Log
                 </button>
+                </>
+                ) : (
                 <button
                   type="button"
-                  onClick={() => setSaleModalOpen(true)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl"
+                  onClick={() => setDownloadModalOpen(true)}
+                  className="bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs px-5 py-2.5 rounded-xl flex items-center gap-2"
                 >
-                  Record Sale
+                  <DownloadIcon />
                 </button>
-              </div>
+                )}
+            </div>
             )}
+          </div>
 
+          <div className="flex flex-col lg:flex-row lg:items-end gap-3">
+              {isAdministrator && (
+                <>
+                {isMobile ? ( 
+                  <div className="flex flex-wrap gap-2 ">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setExpenseEditTarget(null);
+                        setExpenseModalOpen(true);
+                      }}
+                      className="bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl"
+                    >
+                      Add Expenses
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSaleModalOpen(true)}
+                      className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl"
+                    >
+                      Record Sale
+                    </button>
+                  </div>
+                ) : (
+                  <></>
+                  )}
+                </>
+            )}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 flex-1">
-              <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                <span className="mb-1 block">Customer</span>
+              <label className="text-[11px] font-bold uppercase tracking-wider">
+                <span className="mb-1 block text-slate-200">Customer</span>
                 <input
                   type="text"
                   value={customerNameFilter}
                   onChange={(e) => setCustomerNameFilter(e.target.value)}
                   placeholder="Filter by customer"
-                  className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
+                  className="w-full rounded-xl border border-slate-200 text-slate-500 px-3 py-2.5 text-sm"
                 />
               </label>
-              <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                <span className="mb-1 block">Date</span>
+              <label className="text-[11px] font-bold uppercase tracking-wider">
+                <span className="mb-1 block text-slate-200">Date</span>
                 <input
                   type="date"
                   value={dateFilter}
                   onChange={(e) => setDateFilter(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
+                  className="w-full rounded-xl border border-slate-200 text-slate-500 px-3 py-2.5 text-sm"
                 />
               </label>
-              {isMobile ? (
-                <>
-                  <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                    <span className="mb-1 block">Brand</span>
+              <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                    <span className="mb-1 block text-slate-200">Brand</span>
                     <select
                       value={brandFilter}
                       onChange={(e) => setBrandFilter(e.target.value)}
@@ -472,7 +523,7 @@ export default function SalesLogPage() {
                     </select>
                   </label>
                   <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                    <span className="mb-1 block">Weight Class</span>
+                    <span className="mb-1 block text-slate-200">Weight Class</span>
                     <select
                       value={weightClassFilter}
                       onChange={(e) => setWeightClassFilter(e.target.value)}
@@ -486,19 +537,6 @@ export default function SalesLogPage() {
                       ))}
                     </select>
                   </label>
-                </>
-              ) : (
-                <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                  <span className="mb-1 block">Product</span>
-                  <input
-                    type="text"
-                    value={productFilter}
-                    onChange={(e) => setProductFilter(e.target.value)}
-                    placeholder="Brand, weight, status"
-                    className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
-                  />
-                </label>
-              )}
             </div>
           </div>
         </div>
@@ -544,22 +582,29 @@ export default function SalesLogPage() {
             {pagedSales.map((sale) => {
               const entrySummary = getSalesEntrySummary(sale);
               return (
-                <button
-                  key={`${sale.entry_type}-${sale.sale_id}-${sale.log_date}`}
-                  type="button"
-                  onClick={() => openSaleDetails(sale)}
-                  className="w-full rounded-xl border border-slate-200 bg-white p-3 text-left shadow-sm"
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="font-bold text-slate-800">{sale.customer_name}</span>
-                    <span className="font-black text-red-600">{entrySummary.balancePaidLabel}</span>
-                  </div>
-                  <p className="mt-2 text-[11px] text-slate-500">
-                    {sale.brand} - {sale.weight_class}kg - {sale.product_status}
-                  </p>
-                </button>
-              );
+                  <button
+                    key={`${sale.entry_type}-${sale.sale_id}-${sale.log_date}`}
+                    type="button"
+                    onClick={() => openSaleDetails(sale)}
+                    className="w-full rounded-xl bg-gradient-to-b from-blue-900 to-red-900 hover:from-blue-800 hover:to-red-800 p-3 text-left shadow-sm"
+                  >
+                      <>
+                      <div className="flex items-center justify-between gap-3">
+                        <span className="font-bold text-slate-200">{sale.customer_name}</span>
+                        <span className="ml-auto text-[11px] text-slate-300 text-right">
+                          {sale.sale_quantity} pcs - {sale.brand} ({sale.weight_class}kg)
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between gap-3">
+                        <span className="ml-auto text-right font-black text-red-600">
+                          {entrySummary.balancePaidLabel}
+                        </span>
+                      </div>                    
+                      </>                    
+                  </button>
+              ); 
             })}
+            
             {pagedSales.length === 0 && (
               <p className="rounded-xl border border-dashed border-slate-200 p-4 text-center text-sm text-slate-400">
                 No transactions found.
@@ -567,9 +612,9 @@ export default function SalesLogPage() {
             )}
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-xl border border-slate-200 shadow-sm mt-2">
+          <div className="overflow-x-auto rounded-xl shadow-sm mt-2">
             <table className="w-full min-w-[1100px] text-left text-xs sm:text-sm whitespace-nowrap">
-              <thead className="bg-blue-500 text-slate-100 font-bold uppercase tracking-wider">
+              <thead className="bg-gradient-to-b from-blue-700 to-red-700 text-slate-100 font-bold uppercase tracking-wider">
                 <tr>
                   {[
                     { key: "log_date", label: "Log Date", align: "text-left" },
@@ -600,7 +645,7 @@ export default function SalesLogPage() {
                   )}
                 </tr>
               </thead>
-              <tbody className="font-medium text-slate-600">
+              <tbody className="font-medium text-slate-700">
                 {pagedSales.map((sale) => {
                   const isPayment = sale.entry_type === "payment";
                   const entrySummary = getSalesEntrySummary(sale);
@@ -610,7 +655,7 @@ export default function SalesLogPage() {
                       className={
                         selectedSaleId === sale.sale_id
                           ? "bg-red-50"
-                          : "odd:bg-white even:bg-slate-50/70 hover:bg-slate-100/80 transition-colors"
+                          : "odd:bg-white even:bg-slate-50/95 hover:bg-slate-100/80 transition-colors"
                       }
                     >
                       <td className="p-3">
@@ -647,40 +692,40 @@ export default function SalesLogPage() {
                           {!isPayment && (
                             <>
                               <button
-                                type="button"
-                                onClick={() => setSelectedSaleId(sale.sale_id)}
-                                className="text-xs font-bold bg-slate-100 hover:bg-slate-800 hover:text-white px-2 py-1 rounded-lg"
-                              >
-                                Override
+                                  type="button"
+                                  onClick={() => setDeleteTarget(sale)}
+                                  className="text-xs font-bold bg-red-50 text-red-600 hover:bg-red-600 hover:text-white px-2 py-1 rounded-lg"
+                                >
+                                  Delete
                               </button>
                               <button
                                 type="button"
-                                onClick={() => setDeleteTarget(sale)}
-                                className="text-xs font-bold bg-red-50 text-red-600 hover:bg-red-600 hover:text-white px-2 py-1 rounded-lg"
+                                onClick={() => setSelectedSaleId(sale.sale_id)}
+                                className="text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white hover:text-slate-200 px-2 py-1 rounded-lg"
                               >
-                                Delete
-                              </button>
+                                Override
+                              </button>   
                             </>
                           )}
                           {isPayment && (
                             <>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setPaymentEditTarget(sale);
-                                  setPaymentAmount(sale.balance_paid || "");
-                                }}
-                                className="text-xs font-bold bg-slate-100 hover:bg-slate-800 hover:text-white px-2 py-1 rounded-lg"
-                              >
-                                Override
-                              </button>
-                              <button
+                            <button
                                 type="button"
                                 onClick={() => setPaymentDeleteTarget(sale)}
                                 className="text-xs font-bold bg-red-50 text-red-600 hover:bg-red-600 hover:text-white px-2 py-1 rounded-lg"
                               >
                                 Delete
                               </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setPaymentEditTarget(sale);
+                                  setPaymentAmount(sale.balance_paid || "");
+                                }}
+                                className="text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white hover:text-slate-200 px-2 py-1 rounded-lg"
+                              >
+                                Override
+                              </button>   
                             </>
                           )}
                         </td>
@@ -692,7 +737,7 @@ export default function SalesLogPage() {
                   <tr>
                     <td
                       colSpan={isAdministrator ? 11 : 10}
-                      className="text-center py-8 text-slate-400"
+                      className="text-center py-8 text-slate-300"
                     >
                       No transactions found.
                     </td>
@@ -704,23 +749,23 @@ export default function SalesLogPage() {
         )}
 
         {sortedSales.length > pageSize && (
-          <div className="flex items-center justify-between gap-3 px-4 py-3 bg-slate-50 border-t border-slate-200 text-xs text-slate-600">
+          <div className="flex items-center justify-between gap-3 px-4 py-3 text-xs text-slate-200">
             <button
               type="button"
               onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
               disabled={page <= 1}
-              className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-xl bg-gradient-to-b from-blue-600 to-red-600 hover:from-blue-700 hover:to-red-700 px-3 py-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
             >
               Previous
             </button>
-            <div>
+            <div className="font-bold">
               Page {page} of {totalPages}
             </div>
             <button
               type="button"
               onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={page >= totalPages}
-              className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-xl bg-gradient-to-b from-blue-600 to-red-600 hover:from-blue-700 hover:to-red-700 px-3 py-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
             >
               Next
             </button>
@@ -761,7 +806,7 @@ export default function SalesLogPage() {
               </>
             }
           >
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-slate-200">
               Permanently delete this sale for{" "}
               <strong>{deleteTarget.customer_name}</strong>? Stock will be
               restored and all payment records will be removed.
@@ -833,7 +878,7 @@ export default function SalesLogPage() {
               </>
             }
           >
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-slate-200">
               Delete <strong>{expenseDeleteTarget.expenses}</strong> expense of {" "}
               <strong>{formatCurrency(expenseDeleteTarget.amount)}</strong>?
             </p>
@@ -864,7 +909,7 @@ export default function SalesLogPage() {
               </>
             }
           >
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-slate-200">
               Delete this payment record for <strong>{paymentDeleteTarget.customer_name}</strong>? The sale itself will remain unchanged and remaining credit will be recalculated.
             </p>
           </Modal>
@@ -888,12 +933,12 @@ export default function SalesLogPage() {
           <DownloadSalesLogModal onClose={() => setDownloadModalOpen(false)} />
         )}
       </div>
-    <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-4">
+    <div className="bg-gradient-to-t from-blue-900 to-red-900 rounded-xl shadow-sm p-5 sm:p-6 space-y-4">
       <section className="rounded-xl sm:p-1 space-y-3">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h3 className="text-sm font-bold text-slate-900">Expense Overview</h3>
-            <p className="text-[11px] text-slate-400">
+            <h3 className="text-sm font-bold text-white">Expense Overview</h3>
+            <p className="text-[11px] text-slate-300">
               Review expenses for the selected time period.
             </p>
           </div>
@@ -934,19 +979,19 @@ export default function SalesLogPage() {
             {expenses.map((item) => (
               <div
                 key={item.expenses_id}
-                className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm"
+                className="rounded-xl bg-gradient-to-b from-blue-700 to-red-700 p-3 shadow-sm"
               >
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500">Expense</p>
-                    <p className="mt-1 font-bold text-slate-800">{item.expenses}</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wide text-slate-100">Expense</p>
+                    <p className="mt-1 font-bold text-slate-200">{item.expenses}</p>
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500">Amount</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wide text-slate-100">Amount</p>
                     <p className="mt-1 font-black text-red-600">{formatCurrency(item.amount)}</p>
                   </div>
                 </div>
-                <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-2 text-[11px] text-slate-500">
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-2 text-[11px] text-slate-300">
                   <span>{formatDateLocale(item.date)}</span>
                   {isAdministrator && (
                     <div className="flex gap-2">
@@ -976,9 +1021,9 @@ export default function SalesLogPage() {
             )}
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+          <div className="overflow-x-auto rounded-xl shadow-sm">
             <table className="w-full min-w-[480px] text-left text-xs whitespace-nowrap">
-              <thead className="bg-red-500 text-slate-100 font-bold uppercase tracking-wide">
+              <thead className="bg-gradient-to-b from-blue-800 to-red-800 text-slate-100 font-bold uppercase tracking-wide">
                 <tr>
                   <th className="p-3 text-center">Expense</th>
                   <th className="p-3 text-center">Amount</th>
@@ -990,7 +1035,7 @@ export default function SalesLogPage() {
                 {expenses.map((item) => (
                   <tr
                     key={item.expenses_id}
-                    className="odd:bg-white even:bg-slate-50/70 hover:bg-slate-100/80 transition-colors"
+                    className="odd:bg-white even:bg-slate-50/95 hover:bg-slate-100/80 transition-colors"
                   >
                     <td className="p-3 font-bold text-slate-800 text-center">
                       {item.expenses}

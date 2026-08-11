@@ -20,7 +20,7 @@ export function getSalesEntrySummary(sale) {
   return {
     typeLabel: isPaymentEntry ? "Credit Payment" : paymentOption,
     balancePaidValue,
-    balancePaidLabel: shouldShowCreditLabel ? "Credit" : formatCurrency(balancePaidValue),
+    balancePaidLabel: shouldShowCreditLabel ? "Credit Created" : formatCurrency(balancePaidValue),
     remainingBalance: Number(sale.remaining_balance || 0),
     isCreditSale,
     isFullyPaidSale,

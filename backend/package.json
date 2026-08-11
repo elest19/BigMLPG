@@ -1,7 +1,7 @@
 {
-  "name": "rclpg-backend",
+  "name": "bigmlpg-backend",
   "version": "1.0.0",
-  "description": "RCLPG Portal Express API",
+  "description": "BigMLPG Portal Express API",
   "main": "src/index.js",
   "type": "module",
   "scripts": {

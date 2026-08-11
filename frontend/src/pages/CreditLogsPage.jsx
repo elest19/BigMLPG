@@ -92,31 +92,52 @@ function CreditDetailModal({ saleId, readOnly, onClose, onSettled }) {
           <p className="text-sm text-slate-500 text-center py-6">Loading...</p>
         ) : (
           <div className="space-y-4">
-            <dl className="text-sm space-y-2 bg-slate-50 p-4 rounded-xl">
-              <div className="flex justify-between"><dt className="text-slate-500">Customer Name</dt><dd className="font-semibold">{summary.customer_name}</dd></div>
-              <div className="flex justify-between"><dt className="text-slate-500">Phone Number</dt><dd>{summary.phone_number || '-'}</dd></div>
-              <div className="flex justify-between"><dt className="text-slate-500">Invoice Reference</dt><dd className="font-mono text-xs">{summary.sale_id}</dd></div>
-              <div className="flex justify-between"><dt className="text-slate-500">Product Details</dt><dd>{summary.product_details}</dd></div>
-              <div className="flex justify-between"><dt className="text-slate-500">Total Cost</dt><dd className="font-bold">{formatCurrency(summary.total_cost)}</dd></div>
-              <div className="flex justify-between"><dt className="text-slate-500">Total Paid</dt><dd className="font-bold text-emerald-600">{formatCurrency(summary.total_paid)}</dd></div>
-              <div className="flex justify-between border-t pt-2"><dt className="font-bold">Remaining Credit</dt><dd className="font-black text-red-600">{formatCurrency(summary.remaining_credit)}</dd></div>
+            <dl className="text-sm space-y-2 bg-gradient-to-b from-blue-800 to-red-800 p-4 rounded-xl">
+              <div className="flex justify-between">
+                <dt className="text-slate-100">
+                  Customer Name
+                </dt>
+                <dd className="text-slate-300 font-semibold">
+                  {summary.customer_name}
+                </dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="text-slate-100">Phone Number</dt>
+                <dd className="text-slate-300">{summary.phone_number || '-'}</dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="text-slate-100">Product Details</dt>
+                <dd className="text-slate-300">{summary.product_details || '-'}</dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="text-slate-100">Total Cost</dt>
+                <dd className="text-slate-300 font-bold">{formatCurrency(summary.total_cost)}</dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="text-slate-100">Total Paid</dt>
+                <dd className="font-bold text-emerald-600">{formatCurrency(summary.total_paid)}</dd>
+              </div>
+              <div className="flex justify-between border-t pt-2">
+                <dt className="font-bold text-slate-100">Remaining Credit</dt>
+                <dd className="font-black text-red-600">{formatCurrency(summary.remaining_credit)}</dd>
+              </div>
             </dl>
 
             <div>
-              <h3 className="text-xs font-bold uppercase text-slate-500 mb-2">Payment History</h3>
-              <div className="overflow-x-auto border border-slate-100 rounded-xl">
+              <h3 className="text-xs font-bold uppercase text-slate-100 mb-2">Payment History</h3>
+              <div className="overflow-x-auto  bg-gradient-to-b from-blue-800 to-red-800 p-4 rounded-xl">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 text-slate-500 font-bold uppercase">
+                  <thead className="text-slate-500 font-bold uppercase">
                     <tr>
-                      <th className="p-3">Date Paid</th>
-                      <th className="p-3 text-right">Balance Paid</th>
+                      <th className="p-3 text-white">Date Paid</th>
+                      <th className="p-3 text-white text-right">Payment</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-slate-300">
                     {summary.payment_history.map((row) => (
                       <tr key={row.credit_id}>
-                        <td className="p-3">{new Date(row.date_paid).toLocaleString('en-PH')}</td>
-                        <td className="p-3 text-right font-bold">{formatCurrency(row.balance_paid)}</td>
+                        <td className="p-3 text-slate-300">{new Date(row.date_paid).toLocaleString('en-PH')}</td>
+                        <td className="p-3 text-slate-300 text-right font-bold">{row.balance_paid === 0 ? "Sale Created" : formatCurrency(row.balance_paid)}</td>
                       </tr>
                     ))}
                     {summary.payment_history.length === 0 && (
@@ -130,7 +151,7 @@ function CreditDetailModal({ saleId, readOnly, onClose, onSettled }) {
             {!readOnly && summary.remaining_credit > 0 && (
               <div className="space-y-3 border-t pt-4">
                 <div>
-                  <label htmlFor="amount-to-pay" className="block text-xs font-bold uppercase text-slate-500 mb-1">Amount To Pay Now</label>
+                  <label htmlFor="amount-to-pay" className="block text-xs font-bold uppercase text-slate-100 mb-1">Amount To Pay Now</label>
                   <input
                     id="amount-to-pay"
                     type="number"
@@ -142,13 +163,15 @@ function CreditDetailModal({ saleId, readOnly, onClose, onSettled }) {
                     className="w-full text-sm p-3 border border-slate-200 rounded-xl"
                   />
                 </div>
-                <button
-                  type="button"
-                  onClick={handleSettlementRequest}
-                  className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl text-sm"
-                >
-                  Confirm Settlement
-                </button>
+                <div className="pb-4">
+                  <button
+                    type="button"
+                    onClick={handleSettlementRequest}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-sm"
+                  >
+                    Confirm Settlement
+                  </button>
+                </div>
               </div>
             )}
           </div>
@@ -161,19 +184,30 @@ function CreditDetailModal({ saleId, readOnly, onClose, onSettled }) {
           onClose={() => setConfirmSettlement(null)}
           footer={
             <>
-              <button type="button" onClick={() => setConfirmSettlement(null)} className="px-4 py-2 rounded-xl bg-slate-100 text-sm font-bold">Cancel</button>
-              <button type="button" disabled={saving} onClick={commitSettlement} className="px-4 py-2 rounded-xl bg-red-600 text-white text-sm font-bold">
+              <button type="button" onClick={() => setConfirmSettlement(null)} className="px-4 py-2 rounded-xl bg-red-700 text-white text-sm font-bold">Cancel</button>
+              <button type="button" disabled={saving} onClick={commitSettlement} className="px-4 py-2 rounded-xl bg-blue-600 text-white text-sm font-bold">
                 {saving ? 'Processing...' : 'Confirm Payment'}
               </button>
             </>
           }
         >
           <dl className="text-sm space-y-2">
-            <div className="flex justify-between"><dt className="text-slate-500">Customer Name</dt><dd className="font-semibold">{summary.customer_name}</dd></div>
-            <div className="flex justify-between"><dt className="text-slate-500">Invoice Reference</dt><dd className="font-mono text-xs">{summary.sale_id}</dd></div>
-            <div className="flex justify-between"><dt className="text-slate-500">Amount Being Paid</dt><dd className="font-bold text-red-600">{formatCurrency(confirmSettlement.amount)}</dd></div>
-            <div className="flex justify-between"><dt className="text-slate-500">Remaining Before Payment</dt><dd>{formatCurrency(confirmSettlement.remainingBefore)}</dd></div>
-            <div className="flex justify-between border-t pt-2"><dt className="font-bold">Remaining After Payment</dt><dd className="font-black">{formatCurrency(confirmSettlement.remainingAfter)}</dd></div>
+            <div className="flex justify-between">
+              <dt className="text-slate-100">Customer Name</dt>
+              <dd className="text-slate-300 font-semibold">{summary.customer_name}</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-slate-200">Amount Being Paid</dt>
+              <dd className="font-bold text-red-600">{formatCurrency(confirmSettlement.amount)}</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-slate-200">Remaining Before Payment</dt>
+              <dd className="text-slate-300 font-bold">{formatCurrency(confirmSettlement.remainingBefore)}</dd>
+            </div>
+            <div className="flex justify-between border-t pt-2">
+              <dt className="text-white font-bold">Remaining After Payment</dt>
+              <dd className="text-green-600 font-black">{formatCurrency(confirmSettlement.remainingAfter)}</dd>
+            </div>
           </dl>
         </Modal>
       )}
@@ -280,6 +314,7 @@ export default function CreditLogsPage() {
       details: [
         { label: 'Customer Name', value: row.customer_name },
         { label: 'Phone Number', value: row.phone_number || '-' },
+        { label: 'Quantity', value: row.sale_quantity || '-' },
         { label: 'Product Details', value: row.product_details },
         { label: 'Product Price', value: formatCurrency(row.total_amount) },
         { label: 'Total Paid', value: formatCurrency(row.total_paid) },
@@ -304,29 +339,16 @@ export default function CreditLogsPage() {
   if (loading && !credits.length) return <LoadingSpinner />;
 
   return (
-    <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+    <div className="bg-gradient-to-br from-blue-800 to-red-800 p-6 rounded-xl shadow-sm space-y-4">
       <div className="border-b border-slate-100 pb-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold text-slate-900">Customer Credit Register</h2>
+          <h2 className="text-lg font-bold text-white">Credit List</h2>
           <button type="button" onClick={() => setDownloadOpen(true)} className="bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs px-4 py-2.5 rounded-xl">Download Credit Log</button>
         </div>
-        <p className="text-xs text-red-600 font-bold uppercase tracking-wider mt-1">UTANG DESK</p>
         <p className="text-xs text-slate-400 mt-1">Track outstanding balances, installment payments, and customer credit status</p>
       </div>
 
-      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-        {!isMobile && (
-          <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
-            <span className="mb-1 block">Search</span>
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Customer, number, product"
-              className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
-            />
-          </label>
-        )}
+      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5 border-b pb-4">
         <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
           <span className="mb-1 block">Customer</span>
           <input
@@ -358,36 +380,32 @@ export default function CreditLogsPage() {
             <option value="paid">Paid</option>
           </select>
         </label>
-        {isMobile && (
-          <>
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
-              <span className="mb-1 block">Brand</span>
-              <select
-                value={brandFilter}
-                onChange={(e) => setBrandFilter(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
-              >
-                <option value="">All Brands</option>
-                {brandOptions.map((brand) => (
-                  <option key={brand} value={brand}>{brand}</option>
-                ))}
-              </select>
-            </label>
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
-              <span className="mb-1 block">Weight Class</span>
-              <select
-                value={weightClassFilter}
-                onChange={(e) => setWeightClassFilter(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
-              >
-                <option value="">All Weights</option>
-                {weightOptions.map((weight) => (
-                  <option key={weight} value={weight}>{weight}kg</option>
-                ))}
-              </select>
-            </label>
-          </>
-        )}
+          <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+            <span className="mb-1 block">Brand</span>
+            <select
+              value={brandFilter}
+              onChange={(e) => setBrandFilter(e.target.value)}
+              className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
+            >
+              <option value="">All Brands</option>
+              {brandOptions.map((brand) => (
+                <option key={brand} value={brand}>{brand}</option>
+              ))}
+            </select>
+          </label>
+          <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+            <span className="mb-1 block">Weight Class</span>
+            <select
+              value={weightClassFilter}
+              onChange={(e) => setWeightClassFilter(e.target.value)}
+              className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
+            >
+              <option value="">All Weights</option>
+              {weightOptions.map((weight) => (
+                <option key={weight} value={weight}>{weight}kg</option>
+              ))}
+            </select>
+          </label>
       </div>
 
       {isMobile ? (
@@ -397,13 +415,16 @@ export default function CreditLogsPage() {
               key={row.sale_id}
               type="button"
               onClick={() => openCreditDetails(row)}
-              className="w-full rounded-xl border border-slate-200 bg-white p-3 text-left shadow-sm"
+              className="w-full rounded-xl bg-gradient-to-b from-blue-900 to-red-900 hover:from-blue-800 hover:to-red-800 p-3 text-left shadow-sm"
             >
               <div className="flex items-center justify-between gap-3">
-                <span className="font-bold text-slate-800">{row.customer_name}</span>
-                <span className="font-black text-red-600">{formatCurrency(row.remaining_credit)}</span>
+                <span className="font-bold text-slate-200">{row.customer_name}</span>
+                <span className="ml-auto text-right text-[11px] font-black text-slate-300">{row.sale_quantity} pcs - {row.brand}{row.weight_class ? ` (${String(row.weight_class).replace(/\.00$/, '')}kg)` : ''}</span>
               </div>
-              <p className="mt-2 text-[11px] text-slate-500">{row.product_details}</p>
+              <div className="flex items-center justify-between gap-3">
+                <span className="ml-auto text-right font-black text-red-600">{formatCurrency(row.remaining_credit)}
+                </span>
+              </div>
             </button>
           ))}
           {filteredCredits.length === 0 && (
@@ -411,15 +432,15 @@ export default function CreditLogsPage() {
               {credits.length === 0 ? 'No credit sales recorded.' : 'No matching credit sales found.'}
             </p>
           )}
-        </div>
+        </div>      
       ) : (
         <div className="overflow-x-auto rounded-xl border border-slate-200 shadow-sm">
           <table className="w-full min-w-[900px] text-left text-xs sm:text-sm whitespace-nowrap">
-            <thead className="bg-red-500 text-slate-100 font-bold uppercase tracking-wider">
+            <thead className="bg-gradient-to-b from-blue-700 to-red-700 text-slate-100 font-bold uppercase tracking-wider">
               <tr>
-                <th className="p-3">Customer Name</th>
-                <th className="p-3">Number</th>
-                <th className="p-3">Product Details</th>
+                <th className="p-3 text-center">Customer Name</th>
+                <th className="p-3 text-center">Qty</th>
+                <th className="p-3 text-center">Product Details</th>
                 <th className="p-3 text-center">Product Price</th>
                 <th className="p-3 text-center">Total Paid</th>
                 <th className="p-3 text-center">Remaining Credit</th>
@@ -431,11 +452,11 @@ export default function CreditLogsPage() {
               {pagedCredits.map((row) => (
                 <tr
                   key={row.sale_id}
-                  className="odd:bg-white even:bg-slate-50/70 hover:bg-slate-100/80 transition-colors"
+                  className="odd:bg-white even:bg-slate-50/95 hover:bg-slate-100/80 transition-colors"
                 >
-                  <td className="p-3 font-bold text-slate-800">{row.customer_name}</td>
-                  <td className="p-3 font-mono text-xs">{row.phone_number || '-'}</td>
-                  <td className="p-3">{row.product_details}</td>
+                  <td className="p-3 text-center font-bold text-slate-800">{row.customer_name}</td>
+                  <td className="p-3 text-center">{row.sale_quantity}</td>
+                  <td className="p-3 text-center">{row.product_details}</td>
                   <td className="p-3 text-center">{formatCurrency(row.total_amount)}</td>
                   <td className="p-3 text-center text-emerald-600 font-bold">{formatCurrency(row.total_paid)}</td>
                   <td className="p-3 text-center text-red-600 font-extrabold">{formatCurrency(row.remaining_credit)}</td>
@@ -475,7 +496,7 @@ export default function CreditLogsPage() {
             type="button"
             onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
             disabled={page <= 1}
-            className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-xl bg-gradient-to-b from-blue-600 to-red-600 hover:from-blue-700 hover:to-red-700 px-3 py-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
           >
             Previous
           </button>
@@ -486,7 +507,7 @@ export default function CreditLogsPage() {
             type="button"
             onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
             disabled={page >= totalPages}
-            className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-xl bg-gradient-to-b from-blue-600 to-red-600 hover:from-blue-700 hover:to-red-700 px-3 py-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
           >
             Next
           </button>

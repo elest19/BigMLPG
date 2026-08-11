@@ -46,8 +46,8 @@ export const exportReport = [
         .json({ success: false, message: "No sales data for selected period" });
     }
 
-    const title = `RCLPG Sales Report - ${period}`;
-    const filenameBase = `RCLPG_Sales_${period}_${Date.now()}`;
+    const title = `BigMLPG Sales Report - ${period}`;
+    const filenameBase = `BigMLPG_Sales_${period}_${Date.now()}`;
 
     if (format === "excel") {
       const buffer = await reportService.buildExcelBuffer(rows, title);
@@ -122,17 +122,17 @@ export const downloadSalesLog = [
         ? await salesService.getSalesReportAnalytics(exportPeriod, startDate, endDate)
         : null;
 
-    const title = 'RCLPG Customer & Sales Log';
+    const title = 'BigMLPG Customer & Sales Log';
     if (format === 'pdf' || !format) {
       const buffer = await reportService.buildSalesLogPdfBuffer(rows, title, req.user?.name, analytics);
-      const filenameBase = `RCLPG_Sales_Log_${period}_${Date.now()}`;
+      const filenameBase = `BigMLPG_Sales_Log_${period}_${Date.now()}`;
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader('Content-Disposition', `attachment; filename="${filenameBase}.pdf"`);
       return res.send(buffer);
     }
 
     const buffer = await reportService.buildSalesLogExcelBuffer(rows, title);
-    const filenameBase = `RCLPG_Sales_Log_${period}_${Date.now()}`;
+    const filenameBase = `BigMLPG_Sales_Log_${period}_${Date.now()}`;
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     res.setHeader('Content-Disposition', `attachment; filename="${filenameBase}.xlsx"`);
     return res.send(Buffer.from(buffer));
@@ -170,7 +170,7 @@ export const downloadSalesReport = [
       daily: startDate || 'Daily',
     };
 
-    const title = 'RCLPG Sales Report';
+    const title = 'BigMLPG Sales Report';
     if (format === 'pdf' || !format) {
       const buffer = await reportService.buildSalesReportPdfBuffer(
         analytics,
@@ -178,14 +178,14 @@ export const downloadSalesReport = [
         periodLabels[period] || period,
         req.user?.name,
       );
-      const filenameBase = `RCLPG_Sales_Report_${period}_${Date.now()}`;
+      const filenameBase = `BigMLPG_Sales_Report_${period}_${Date.now()}`;
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader('Content-Disposition', `attachment; filename="${filenameBase}.pdf"`);
       return res.send(buffer);
     }
 
     const buffer = await reportService.buildSalesReportExcelBuffer(analytics, title, periodLabels[period] || period);
-    const filenameBase = `RCLPG_Sales_Report_${period}_${Date.now()}`;
+    const filenameBase = `BigMLPG_Sales_Report_${period}_${Date.now()}`;
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     res.setHeader('Content-Disposition', `attachment; filename="${filenameBase}.xlsx"`);
     return res.send(Buffer.from(buffer));
@@ -219,8 +219,8 @@ export const downloadCreditLog = [
       unpaidAccounts: filtered.filter((r) => r.remaining_credit > 0).length,
     };
 
-    const buffer = await reportService.buildCreditLogPdfBuffer(filtered, 'RCLPG Credit Log Report', summary, req.user?.name);
-    const filenameBase = `RCLPG_Credit_Log_${Date.now()}`;
+    const buffer = await reportService.buildCreditLogPdfBuffer(filtered, 'BigMLPG Credit Log Report', summary, req.user?.name);
+    const filenameBase = `BigMLPG_Credit_Log_${Date.now()}`;
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename="${filenameBase}.pdf"`);
     return res.send(buffer);

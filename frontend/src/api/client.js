@@ -1,19 +1,22 @@
 const API_URL = import.meta.env.VITE_API_URL || "/api";
 
 function getToken() {
-  return localStorage.getItem("rclpg_token");
+  const newKey = localStorage.getItem("bigmlpg_token");
+  return newKey;
 }
 
 function getExpiry() {
-  return localStorage.getItem("rclpg_expires_at");
+  const newKey = localStorage.getItem("bigmlpg_expires_at");
+  return newKey;
 }
 
 export { getToken, getExpiry };
 
 export function clearSession() {
-  localStorage.removeItem("rclpg_token");
-  localStorage.removeItem("rclpg_expires_at");
-  localStorage.removeItem("rclpg_admin");
+  // remove both legacy and new keys
+  localStorage.removeItem("bigmlpg_token");
+  localStorage.removeItem("bigmlpg_expires_at");
+  localStorage.removeItem("bigmlpg_admin");
 }
 
 function delay(ms) {
@@ -193,7 +196,7 @@ export const api = {
     const disposition = response.headers.get("Content-Disposition") || "";
     const match = disposition.match(/filename="(.+)"/);
     const filename =
-      match?.[1] || `RCLPG_Report.${params.format === "pdf" ? "pdf" : "xlsx"}`;
+      match?.[1] || `BIGMLPG_Report.${params.format === "pdf" ? "pdf" : "xlsx"}`;
     return { blob, filename };
   },
   downloadSalesReport: async (params) => {
@@ -202,7 +205,7 @@ export const api = {
     const blob = await response.blob();
     const disposition = response.headers.get("Content-Disposition") || "";
     const match = disposition.match(/filename="(.+)"/);
-    const filename = match?.[1] || `RCLPG_Sales_Report_${Date.now()}.pdf`;
+    const filename = match?.[1] || `BIGMLPG_Sales_Report_${Date.now()}.pdf`;
     return { blob, filename };
   },
   downloadSalesLog: async (params) => {
@@ -211,7 +214,7 @@ export const api = {
     const blob = await response.blob();
     const disposition = response.headers.get("Content-Disposition") || "";
     const match = disposition.match(/filename="(.+)"/);
-    const filename = match?.[1] || `RCLPG_Sales_Log_${Date.now()}.pdf`;
+    const filename = match?.[1] || `BIGMLPG_Sales_Log_${Date.now()}.pdf`;
     return { blob, filename };
   },
   downloadCreditLog: async (params) => {
@@ -220,20 +223,26 @@ export const api = {
     const blob = await response.blob();
     const disposition = response.headers.get("Content-Disposition") || "";
     const match = disposition.match(/filename="(.+)"/);
-    const filename = match?.[1] || `RCLPG_Credit_Log_${Date.now()}.pdf`;
+    const filename = match?.[1] || `BIGMLPG_Credit_Log_${Date.now()}.pdf`;
     return { blob, filename };
   },
 };
 
 export function saveSession({ token, expiresAt, admin }) {
-  localStorage.setItem("rclpg_token", token);
-  localStorage.setItem("rclpg_expires_at", expiresAt);
-  localStorage.setItem("rclpg_admin", JSON.stringify(admin));
+  // write new keys and remove legacy ones
+  localStorage.setItem("bigmlpg_token", token);
+  localStorage.setItem("bigmlpg_expires_at", expiresAt);
+  localStorage.setItem("bigmlpg_admin", JSON.stringify(admin));
 }
 
 export function getStoredAdmin() {
-  const raw = localStorage.getItem("rclpg_admin");
-  return raw ? JSON.parse(raw) : null;
+  let raw = localStorage.getItem("bigmlpg_admin");
+  if (!raw || raw === "undefined" || raw === "null") return null;
+  try {
+    return JSON.parse(raw);
+  } catch (err) {
+    return null;
+  }
 }
 
 export const formatCurrency = (value) =>

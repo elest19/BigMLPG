@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { api } from '../api/client';
 import { useToast } from '../context/ToastContext';
+import Modal from './Modal';
 
 const PERIODS = [
   { value: 'today', label: 'Today' },
@@ -77,106 +78,61 @@ export default function DownloadSalesLogModal({ onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4" role="dialog" aria-modal="true" aria-labelledby="download-log-title">
-      <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 space-y-4">
-        <h2 id="download-log-title" className="text-lg font-bold text-slate-900">
-          Download Sales Log
-        </h2>
-        <p className="text-xs text-slate-500">
-          Export the Customer & Sales Log to PDF for the selected period.
-        </p>
+    <Modal
+      title="Download Sales Log"
+      onClose={onClose}
+      size="md"
+      footer={(
+        <>
+          <button type="button" onClick={onClose} className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-bold">Cancel</button>
+          <button type="button" disabled={loading} onClick={handleDownload} className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold disabled:opacity-60">{loading ? 'Generating...' : 'Download Log'}</button>
+        </>
+      )}
+    >
+      <p className="text-xs text-slate-300">Export the Customer & Sales Log to PDF for the selected period.</p>
 
-        <fieldset className="space-y-2">
-          <legend className="sr-only">Report period</legend>
-          {PERIODS.map((item) => (
-            <label key={item.value} className="flex items-center gap-2 text-sm">
-              <input
-                type="radio"
-                name="sales-log-period"
-                value={item.value}
-                checked={period === item.value}
-                onChange={() => setPeriod(item.value)}
-              />
-              {item.label}
-            </label>
-          ))}
-        </fieldset>
-
-        {period === 'monthly' && (
-          <div>
-            <label htmlFor="log-month" className="block text-xs font-bold uppercase text-slate-500 mb-1">
-              Month
-            </label>
+      <fieldset className="space-y-2">
+        <legend className="sr-only">Report period</legend>
+        {PERIODS.map((item) => (
+          <label key={item.value} className="flex items-center gap-2 text-sm text-slate-100">
             <input
-              id="log-month"
-              type="month"
-              value={monthValue}
-              onChange={(e) => setMonthValue(e.target.value)}
-              className="w-full text-sm p-2.5 border border-slate-200 rounded-xl"
+              type="radio"
+              name="sales-log-period"
+              value={item.value}
+              checked={period === item.value}
+              onChange={() => setPeriod(item.value)}
             />
-          </div>
-        )}
+            {item.label}
+          </label>
+        ))}
+      </fieldset>
 
-        {period === 'yearly' && (
-          <div>
-            <label htmlFor="log-year" className="block text-xs font-bold uppercase text-slate-500 mb-1">
-              Year
-            </label>
-            <input
-              id="log-year"
-              type="number"
-              min="2000"
-              max="2100"
-              value={yearValue}
-              onChange={(e) => setYearValue(e.target.value)}
-              className="w-full text-sm p-2.5 border border-slate-200 rounded-xl"
-            />
-          </div>
-        )}
-
-        {period === 'custom' && (
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label htmlFor="log-start-date" className="block text-xs font-bold uppercase text-slate-500 mb-1">
-                Start Date
-              </label>
-              <input
-                id="log-start-date"
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="w-full text-sm p-2.5 border border-slate-200 rounded-xl"
-              />
-            </div>
-            <div>
-              <label htmlFor="log-end-date" className="block text-xs font-bold uppercase text-slate-500 mb-1">
-                End Date
-              </label>
-              <input
-                id="log-end-date"
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="w-full text-sm p-2.5 border border-slate-200 rounded-xl"
-              />
-            </div>
-          </div>
-        )}
-
-        <div className="flex justify-end gap-2 pt-2">
-          <button type="button" onClick={onClose} className="px-4 py-2 rounded-xl bg-slate-100 text-sm font-bold">
-            Cancel
-          </button>
-          <button
-            type="button"
-            disabled={loading}
-            onClick={handleDownload}
-            className="px-4 py-2 rounded-xl bg-red-600 text-white text-sm font-bold disabled:opacity-60"
-          >
-            {loading ? 'Generating...' : 'Download Log'}
-          </button>
+      {period === 'monthly' && (
+        <div>
+          <label htmlFor="log-month" className="block text-xs font-bold uppercase text-slate-100 mb-1">Month</label>
+          <input id="log-month" type="month" value={monthValue} onChange={(e) => setMonthValue(e.target.value)} className="w-full text-sm p-2.5 border border-slate-200 rounded-xl" />
         </div>
-      </div>
-    </div>
+      )}
+
+      {period === 'yearly' && (
+        <div>
+          <label htmlFor="log-year" className="block text-xs font-bold uppercase text-slate-100 mb-1">Year</label>
+          <input id="log-year" type="number" min="2000" max="2100" value={yearValue} onChange={(e) => setYearValue(e.target.value)} className="w-full text-sm p-2.5 border border-slate-200 rounded-xl" />
+        </div>
+      )}
+
+      {period === 'custom' && (
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label htmlFor="log-start-date" className="block text-xs font-bold uppercase text-slate-100 mb-1">Start Date</label>
+            <input id="log-start-date" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="w-full text-sm p-2.5 border border-slate-200 rounded-xl" />
+          </div>
+          <div>
+            <label htmlFor="log-end-date" className="block text-xs font-bold uppercase text-slate-100 mb-1">End Date</label>
+            <input id="log-end-date" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="w-full text-sm p-2.5 border border-slate-200 rounded-xl" />
+          </div>
+        </div>
+      )}
+    </Modal>
   );
 }

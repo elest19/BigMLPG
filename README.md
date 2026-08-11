@@ -1,4 +1,4 @@
-# RCLPG Portal — PERN Stack Application
+# BigMLPG Portal — PERN Stack Application
 
 Production-ready LPG Inventory Management Portal built with **PostgreSQL (Supabase)**, **Express**, **React**, and **Node.js**.
 
@@ -22,7 +22,7 @@ LPG/
 │       └── pages/           # Route pages
 ├── database/
 │   └── migrations/          # Minimal schema additions
-└── rclpg system.html        # Original static prototype
+└── bigmlpg system.html        # Original static prototype
 ```
 
 ## Schema Review & Minimal Additions

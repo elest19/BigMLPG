@@ -191,11 +191,11 @@ export default function AdminProfilePage() {
 
   return (
     <div className="space-y-8">
-      <section className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+      <section className="bg-gradient-to-br from-blue-800 to-red-800 rounded-2xl shadow-sm p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <div>
-            <h1 className="text-2xl font-black text-slate-900">Administrator Profile</h1>
-            <p className="text-sm text-slate-500 mt-1">Manage your account details and staff users.</p>
+            <h1 className="text-2xl font-black text-white">Administrator Profile</h1>
+            <p className="text-sm text-slate-300 mt-1">Manage your account details and staff users.</p>
           </div>
           {!editing ? (
             <button
@@ -210,7 +210,7 @@ export default function AdminProfilePage() {
               <button
                 type="button"
                 onClick={handleCancelEdit}
-                className="px-4 py-2.5 rounded-xl text-sm font-bold text-slate-600 bg-slate-100 hover:bg-slate-200"
+                className="px-4 py-2.5 rounded-xl text-sm font-bold text-white bg-red-600 hover:bg-red-700"
               >
                 Cancel
               </button>
@@ -218,7 +218,7 @@ export default function AdminProfilePage() {
                 type="button"
                 onClick={handleSaveProfile}
                 disabled={saving}
-                className="px-4 py-2.5 rounded-xl text-sm font-bold text-white bg-red-600 hover:bg-red-700 disabled:opacity-50"
+                className="px-4 py-2.5 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
               >
                 {saving ? 'Saving…' : 'Save Profile'}
               </button>
@@ -282,9 +282,7 @@ export default function AdminProfilePage() {
               <ProfileField label="Email" value={profile?.email} htmlFor="admin-email-ro" />
               <ProfileField label="Phone Number" value={profile?.phoneNumber} htmlFor="admin-phone-ro" />
               <ProfileField label="Role" value={formatRoleLabel(profile?.role)} htmlFor="admin-role-ro" />
-              <div className="md:col-span-2">
-                <MaskedPasswordField id="admin-password-ro" />
-              </div>
+              <MaskedPasswordField id="admin-password-ro" />
               <button
                   type="button"
                   onClick={openDeleteAllModal}
@@ -297,11 +295,11 @@ export default function AdminProfilePage() {
         </div>
       </section>
 
-      <section className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <section className="bg-gradient-to-b from-blue-800 to-red-800 rounded-2xl shadow-sm overflow-hidden">
+        <div className="p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h2 className="text-lg font-black text-slate-900">Management Staff List</h2>
-            <p className="text-sm text-slate-500 mt-1">View and manage portal staff accounts.</p>
+            <h2 className="text-lg font-black text-white">Management Staff List</h2>
+            <p className="text-sm text-slate-300 mt-1">View and manage portal staff accounts.</p>
           </div>
           <div className="flex gap-2">
             <button
@@ -346,15 +344,15 @@ export default function AdminProfilePage() {
                   key={user.adminId}
                   type="button"
                   onClick={() => openUserDetails(user)}
-                  className="w-full rounded-xl border border-slate-200 bg-white p-3 text-left shadow-sm"
+                  className="w-full rounded-xl bg-gradient-to-b from-blue-700 to-red-700 hover:from-blue-600 hover:to-red-600 p-3 text-left shadow-sm"
                 >
                   <div className="flex items-center justify-between gap-3">
-                    <span className="font-bold text-slate-800">{user.name}</span>
-                    <span className="inline-flex rounded-lg bg-slate-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-slate-700">
+                    <span className="font-bold text-white">{user.name}</span>
+                    <span className="inline-flex rounded-lg bg-gradient-to-r from-blue-500 to-red-500 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-slate-100">
                       {formatRoleLabel(user.role)}
                     </span>
                   </div>
-                  <p className="mt-2 text-[11px] text-slate-500">{user.username}</p>
+                  <p className="mt-2 text-[11px] text-slate-300">{user.username}</p>
                 </button>
               ))
             )}
@@ -362,7 +360,7 @@ export default function AdminProfilePage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full text-sm">
-              <thead className="bg-slate-50 text-left text-xs font-bold uppercase tracking-wide text-slate-500">
+              <thead className="bg-gradient-to-b from-blue-900 to-red-900 text-left text-xs font-bold uppercase tracking-wide text-white">
                 <tr>
                   <th className="px-4 py-3">Full Name</th>
                   <th className="px-4 py-3">Username</th>
@@ -375,7 +373,7 @@ export default function AdminProfilePage() {
               <tbody className="divide-y divide-slate-100">
                 {usersLoading ? (
                   <tr>
-                    <td colSpan={6} className="px-4 py-8 text-center text-slate-400">
+                    <td colSpan={6} className="px-4 py-8 text-center text-slate-200">
                       Loading staff list…
                     </td>
                   </tr>
@@ -387,19 +385,19 @@ export default function AdminProfilePage() {
                   </tr>
                 ) : users.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-4 py-8 text-center text-slate-400">
+                    <td colSpan={6} className="px-4 py-8 text-center text-slate-200">
                       No {showArchived ? 'archived' : 'active'} staff found.
                     </td>
                   </tr>
                 ) : (
                   users.map((user) => (
-                    <tr key={user.adminId} className="hover:bg-slate-50/80">
-                      <td className="px-4 py-3 font-semibold text-slate-900">{user.name}</td>
-                      <td className="px-4 py-3 text-slate-600">{user.username}</td>
-                      <td className="px-4 py-3 text-slate-600">{user.email || '—'}</td>
-                      <td className="px-4 py-3 text-slate-600">{user.phoneNumber || '—'}</td>
+                    <tr key={user.adminId} className="hover:bg-slate-100/40">
+                      <td className="px-4 py-3 font-semibold text-slate-100">{user.name}</td>
+                      <td className="px-4 py-3 text-slate-200">{user.username}</td>
+                      <td className="px-4 py-3 text-slate-200">{user.email || '—'}</td>
+                      <td className="px-4 py-3 text-slate-200">{user.phoneNumber || '—'}</td>
                       <td className="px-4 py-3">
-                        <span className="inline-flex px-2 py-0.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-700">
+                        <span className="inline-flex px-2 py-0.5 rounded-lg text-xs font-bold bg-gradient-to-r from-blue-500 to-red-500 text-slate-100">
                           {formatRoleLabel(user.role)}
                         </span>
                       </td>
@@ -407,7 +405,7 @@ export default function AdminProfilePage() {
                         <button
                           type="button"
                           onClick={() => setViewUserId(user.adminId)}
-                          className="text-xs font-bold text-red-600 hover:text-red-700 px-3 py-1.5 rounded-lg hover:bg-red-50"
+                          className="text-xs font-bold text-slate-100 hover:text-slate-500 px-3 py-1.5 rounded-lg hover:bg-red-50"
                         >
                           View
                         </button>
@@ -465,14 +463,14 @@ export default function AdminProfilePage() {
           }
         >
           <div className="space-y-4">
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-slate-100">
               This action permanently deletes every sales record and related payment history. Type the exact phrase below to continue.
             </p>
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
               <p className="text-[11px] font-bold uppercase tracking-wide text-slate-500">Required phrase</p>
               <p className="mt-1 font-mono text-sm text-slate-700">I confirm to delete the sales logs</p>
             </div>
-            <label className="block text-xs font-bold uppercase tracking-wide text-slate-500">
+            <label className="block text-xs font-bold uppercase tracking-wide text-slate-100">
               Confirmation
               <input
                 type="text"
@@ -510,8 +508,8 @@ export default function AdminProfilePage() {
           }
         >
           <div className="space-y-3">
-            <p className="text-sm font-semibold text-slate-800">Are you sure you want to continue?</p>
-            <p className="text-sm text-slate-600">
+            <p className="text-sm font-semibold text-slate-200">Are you sure you want to continue?</p>
+            <p className="text-sm text-slate-300">
               This action is permanent and cannot be undone. Make sure you already have a backup or exported copy of the Sales Log History before deleting all sales records.
             </p>
           </div>

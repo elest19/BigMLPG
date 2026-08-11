@@ -99,15 +99,27 @@ function InventoryTable({
             key={p.product_id}
             type="button"
             onClick={() => onView?.(p)}
-            className="w-full rounded-xl border border-slate-200 bg-white p-3 text-left shadow-sm"
+            className="w-full rounded-xl border border-slate-200 bg-gradient-to-br from-blue-800 to-red-800 p-3 text-left shadow-sm hover:from-blue-700 hover:to-red-700 transition-colors"
           >
             <div className="flex items-center justify-between">
-              <span className="text-sm font-bold text-slate-800">Stock</span>
-              <span className="font-black text-slate-900">{p.stock_quantity}</span>
+              <span className="text-sm font-bold text-slate-100">Stock</span>
+              <span className="font-black text-slate-200">{p.stock_quantity}</span>
             </div>
-            <div className="mt-2 flex items-center justify-between text-[11px] text-slate-500">
+            <div className="mt-2 flex items-center justify-between text-[11px] text-slate-300">
               <span>Date Created</span>
               <span>{new Date(p.created_at).toLocaleDateString()}</span>
+            </div>
+            <div className="mt-2 flex items-center justify-between text-[11px] text-slate-300">
+              <span>Original Price</span>
+              <span>{formatCurrency(p.initial_price)}</span>
+            </div>
+            <div className="mt-2 flex items-center justify-between text-[11px] text-slate-300">
+              <span>Consumer Price</span>
+              <span>{formatCurrency(p.regular_retail)}</span>
+            </div>
+            <div className="mt-2 flex items-center justify-between text-[11px] text-slate-300">
+              <span>Retail Price</span>
+              <span>{formatCurrency(p.wholesale_price)}</span>
             </div>
           </button>
         ))}
@@ -116,9 +128,9 @@ function InventoryTable({
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-slate-200 shadow-sm">
+    <div className="overflow-x-auto rounded-xl shadow-sm">
       <table className="w-full min-w-[900px] text-left text-xs sm:text-sm whitespace-nowrap">
-        <thead className="bg-blue-500 text-slate-100 font-bold uppercase tracking-wider">
+        <thead className="bg-gradient-to-b from-blue-700 to-red-700 text-slate-100 font-bold uppercase tracking-wider">
           <tr>
             <th className="p-3">Status</th>
             <th className="p-3 text-center">Stock</th>
@@ -136,7 +148,7 @@ function InventoryTable({
             return (
               <tr
                 key={p.product_id}
-                className="odd:bg-white even:bg-slate-50/70 hover:bg-slate-100/80 transition-colors"
+                className="odd:bg-white even:bg-slate-50/95 hover:bg-slate-100/80 transition-colors"
               >
                 <td className="p-3">{p.status}</td>
                 <td className="p-3 text-center font-black">{p.stock_quantity}</td>
@@ -432,40 +444,41 @@ export default function InventoryPage() {
     });
 
     return (
-      <div className="space-y-4">
-        <div className="border-b border-slate-200 pb-2">
-          <h4 className="text-sm font-black text-slate-700 uppercase tracking-wide">
-            {title}
-          </h4>
-        </div>
-        <div className="space-y-4">
-          {Array.from(groupedByWeight.entries())
-            .sort(([left], [right]) => Number(left) - Number(right))
-            .map(([weightClass, weightProducts]) => (
-              <div
-                key={`${title}-${weightClass}`}
-                className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden"
-              >
-                <div className="border-b border-slate-100 bg-slate-50 px-3 py-2">
-                  <h5 className="text-xs font-bold uppercase text-slate-700 tracking-wider">
+      <>
+        <div className="space-y-4 bg-gradient-to-b from-blue-900 to-red-900 rounded-xl p-4 shadow-sm">
+          <div className="border-b border-slate-200 pb-2">
+            <h4 className="text-sm font-black text-white uppercase tracking-wide">
+              {title}
+            </h4>
+          </div>
+          <div className="space-y-4">
+            {Array.from(groupedByWeight.entries())
+              .sort(([left], [right]) => Number(left) - Number(right))
+              .map(([weightClass, weightProducts]) => (
+                <div
+                  key={`${title}-${weightClass}`}
+                  className="rounded-xl shadow-sm overflow-hidden"
+                >
+                  <h5 className="text-xs font-bold uppercase text-slate-100 tracking-wider px-3 py-2">
                     Weight - {weightClass} kg
                   </h5>
+                  <div className="p-2 sm:p-3">
+                    <InventoryTable
+                      products={weightProducts}
+                      onEdit={setEditProduct}
+                      onDelete={setDeleteTarget}
+                      onArchive={setArchiveTarget}
+                      onView={openProductDetails}
+                      isAdmin={isAdministrator}
+                      archiveMode={showArchived}
+                    />
+                  </div>
+                  <div className="border-b border-slate-200 pb-2"></div>
                 </div>
-                <div className="p-2 sm:p-3">
-                  <InventoryTable
-                    products={weightProducts}
-                    onEdit={setEditProduct}
-                    onDelete={setDeleteTarget}
-                    onArchive={setArchiveTarget}
-                    onView={openProductDetails}
-                    isAdmin={isAdministrator}
-                    archiveMode={showArchived}
-                  />
-                </div>
-              </div>
-            ))}
+              ))}
+          </div>
         </div>
-      </div>
+      </>
     );
   };
 
@@ -475,18 +488,18 @@ export default function InventoryPage() {
     <div className="space-y-6">
       <BrandInventoryOverview refreshKey={inventoryRefreshKey} />
 
-      <section className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+      <section className="bg-gradient-to-b from-blue-900 to-red-900 p-5 rounded-xl  shadow-sm space-y-4">
         <div className="border-b border-slate-100 pb-2">
-          <h2 className="text-base font-bold text-slate-900">
+          <h2 className="text-base font-bold text-white">
             Quick Catalog Interactive Filters
           </h2>
-          <p className="text-xs text-slate-400">All filters work together</p>
+          <p className="text-xs text-slate-300">All filters work together</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label
               htmlFor="brand-filter"
-              className="block text-[11px] font-bold uppercase text-slate-500 mb-1"
+              className="block text-[11px] font-bold uppercase text-slate-100 mb-1"
             >
               Brand
             </label>
@@ -507,7 +520,7 @@ export default function InventoryPage() {
           <div>
             <label
               htmlFor="condition-filter"
-              className="block text-[11px] font-bold uppercase text-slate-500 mb-1"
+              className="block text-[11px] font-bold uppercase text-slate-100 mb-1"
             >
               Tank Condition
             </label>
@@ -525,7 +538,7 @@ export default function InventoryPage() {
           <div>
             <label
               htmlFor="stock-filter"
-              className="block text-[11px] font-bold uppercase text-slate-500 mb-1"
+              className="block text-[11px] font-bold uppercase text-slate-100 mb-1"
             >
               Live Stock Warning Tier
             </label>
@@ -544,45 +557,31 @@ export default function InventoryPage() {
         </div>
       </section>
 
-      {isAdministrator && (
-        <section className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-          <div className="flex items-center justify-between">
-            <h2 className="text-base font-bold text-slate-900">
-              Catalog Action Controls
-            </h2>
-            <button
-              type="button"
-              onClick={() => setAddModalOpen(true)}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl"
-            >
-             Add New Product
-            </button>
+      
+      <section className="shadow-sm pt-5">
+          <div className="flex items-center justify-between bg-red-900 rounded-t-xl p-4 shadow-sm">
+              <h2 className="text-lg font-bold text-white">
+                Inventory Holdings
+              </h2>
+            {isAdministrator && (
+              <button
+                type="button"
+                onClick={() => setAddModalOpen(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl"
+              >
+              Add Product
+              </button>
+            )}
           </div>
-        </section>
-      )}
-
-      <section className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 pb-3">
-          <div>
-            <h2 className="text-base font-bold text-slate-900">
-              {showArchived ? "Archived Inventory" : "Inventory Holdings"}
-            </h2>
-            <p className="text-xs text-slate-400">
-              {showArchived
-                ? "Archived records remain in the system until they are permanently deleted."
-                : "Inventory is grouped by weight class so depleted older batches can be archived cleanly."}
-            </p>
-          </div>
-        </div>
-
+          <div className="border-b border-slate-500"></div>
         {brands.map((brand) => {
           const { filled, empty } = groupedByBrand[brand];
           if (!filled.length && !empty.length) return null;
 
           return (
-            <div key={brand}>
-              <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-                <h3 className="text-base font-black text-slate-800 border-l-4 border-blue-600 pl-3">
+            <div key={brand} className="space-y-4 bg-gradient-to-b from-blue-950 to-red-950 rounded-b-xl p-4 shadow-sm">
+              <div className="flex items-center justify-between border-b border-slate-200 p-2">
+                <h3 className="text-base font-black text-white border-l-4 border-blue-600 pl-3">
                   {brand}
                 </h3>
                 <div className="space-y-4h-2 w-2 rounded-full bg-blue-500" />
@@ -591,6 +590,7 @@ export default function InventoryPage() {
                 {filled.length > 0 && renderInventorySection("Filled Tank", filled)}
                 {empty.length > 0 && renderInventorySection("Empty Cylinder", empty)}
               </div>
+               
             </div>
           );
         })}
@@ -604,7 +604,7 @@ export default function InventoryPage() {
 
       {isAdministrator && addModalOpen && (
         <Modal
-          title="Add New Product"
+          title="Add Product"
           onClose={() => setAddModalOpen(false)}
           size="lg"
           footer={
@@ -769,7 +769,7 @@ export default function InventoryPage() {
 
       {isAdministrator && editProduct && (
         <Modal
-          title={`Edit Product ${editProduct.product_id}`}
+          title={`Edit Product No. ${editProduct.product_id}`}
           onClose={() => setEditProduct(null)}
           footer={
             <>
@@ -944,7 +944,7 @@ export default function InventoryPage() {
             </>
           }
         >
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-slate-200">
             Permanently delete product{" "}
             <strong>{deleteTarget.product_id}</strong> ({deleteTarget.brand}{" "}
             {deleteTarget.weight_class}kg)? This action cannot be undone.

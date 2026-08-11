@@ -306,21 +306,21 @@ export default function SaleForm({
 
   return (
     <div
-      className={`bg-white rounded-xl space-y-4 ${compact ? "" : "p-6 border border-slate-200 shadow-sm"}`}
+      className={`rounded-xl space-y-4 ${compact ? "" : "p-6 border border-slate-200 shadow-sm"}`}
     >
       {!compact && (
         <div className="border-b border-slate-100 pb-3">
-          <h2 className="text-lg font-bold text-slate-900">{title}</h2>
-          <p className="text-xs text-slate-400">{description}</p>
+          <h2 className="text-lg font-bold text-white">{title}</h2>
+          <p className="text-xs text-slate-100">{description}</p>
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <fieldset className="space-y-2">
-          <legend className="text-xs font-bold uppercase text-slate-500">
+          <legend className="text-xs font-bold uppercase text-slate-100">
             Customer Mode
           </legend>
-          <label className="inline-flex items-center gap-2 mr-4 text-sm">
+          <label className="inline-flex items-center gap-2 mr-4 text-sm text-slate-200">
             <input
               type="radio"
               name="customerMode"
@@ -329,7 +329,7 @@ export default function SaleForm({
             />
             Existing Customer
           </label>
-          <label className="inline-flex items-center gap-2 text-sm">
+          <label className="inline-flex items-center gap-2 text-sm text-slate-200">
             <input
               type="radio"
               name="customerMode"
@@ -353,7 +353,7 @@ export default function SaleForm({
               nothingFoundMessage="No matching customers"
               required
               classNames={{
-                label: "text-xs font-bold uppercase text-slate-500 mb-1",
+                label: "text-xs font-bold uppercase text-slate-100 mb-1",
               }}
             />
           </div>
@@ -361,7 +361,7 @@ export default function SaleForm({
           <div>
             <label
               htmlFor="customer-name"
-              className="block text-xs font-bold uppercase text-slate-500 mb-1"
+              className="block text-xs font-bold uppercase text-slate-100 mb-1"
             >
               Customer Name
             </label>
@@ -379,7 +379,7 @@ export default function SaleForm({
           <div>
             <label
               htmlFor="location"
-              className="block text-xs font-bold uppercase text-slate-500 mb-1"
+              className="block text-xs font-bold uppercase text-slate-100 mb-1"
             >
               Location
             </label>
@@ -393,7 +393,7 @@ export default function SaleForm({
           <div>
             <label
               htmlFor="phone"
-              className="block text-xs font-bold uppercase text-slate-500 mb-1"
+              className="block text-xs font-bold uppercase text-slate-100 mb-1"
             >
               Phone Number
             </label>
@@ -409,7 +409,7 @@ export default function SaleForm({
         <div>
           <label
             htmlFor="price-type"
-            className="block text-xs font-bold uppercase text-slate-500 mb-1"
+            className="block text-xs font-bold uppercase text-slate-100 mb-1"
           >
             Price Type
           </label>
@@ -429,7 +429,7 @@ export default function SaleForm({
             <div>
               <label
                 htmlFor="payment-method"
-                className="block text-xs font-bold uppercase text-slate-500 mb-1"
+                className="block text-xs font-bold uppercase text-slate-100 mb-1"
               >
                 Payment Method
               </label>
@@ -446,11 +446,11 @@ export default function SaleForm({
           </div>
         )}
 
-        <fieldset className="space-y-2 bg-slate-50 p-3 rounded-xl border border-slate-100">
-          <legend className="text-xs font-bold uppercase text-slate-500">
-            Tank Type
-          </legend>
-          <div className="flex flex-wrap gap-4">
+        <fieldset className="space-y-2 bg-slate-50 p-2 rounded-xl border border-slate-100">
+          <div className="flex gap-3">
+            <h3 className="text-xs font-bold uppercase">
+              Tank Category
+            </h3>
             <label className="inline-flex items-center gap-2 text-sm">
               <input
                 type="checkbox"
@@ -465,7 +465,7 @@ export default function SaleForm({
                 checked={purchaseTank}
                 onChange={(e) => setPurchaseTank(e.target.checked)}
               />
-              Purchase Tank
+              With Tank
             </label>
           </div>
         </fieldset>
@@ -474,9 +474,9 @@ export default function SaleForm({
           <div>
             <label
               htmlFor="brand"
-              className="block text-xs font-bold uppercase text-slate-500 mb-1"
+              className="block text-xs font-bold uppercase text-slate-100 mb-1"
             >
-              Brand (Filled Tank Sold)
+              Brand 
             </label>
             <select
               id="brand"
@@ -496,7 +496,7 @@ export default function SaleForm({
             <div>
               <label
                 htmlFor="product-weight"
-                className="block text-xs font-bold uppercase text-slate-500 mb-1"
+                className="block text-xs font-bold uppercase text-slate-100 mb-1"
               >
                 Weight Class
               </label>
@@ -520,7 +520,7 @@ export default function SaleForm({
             <div>
               <label
                 htmlFor="product"
-                className="block text-xs font-bold uppercase text-slate-500 mb-1"
+                className="block text-xs font-bold uppercase text-slate-100 mb-1"
               >
                 Stock Entry
               </label>
@@ -552,11 +552,11 @@ export default function SaleForm({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 bg-slate-50 p-3 rounded-xl border border-slate-100">
+        <div className="grid grid-cols-2 gap-4 p-2 rounded-xl ">
           <div>
             <label
               htmlFor="qty"
-              className="block text-xs font-bold uppercase text-slate-500 mb-1"
+              className="block text-xs font-bold uppercase mb-1 text-slate-100"
             >
               Quantity
             </label>
@@ -573,7 +573,7 @@ export default function SaleForm({
           <div>
             <label
               htmlFor="unit-price"
-              className="block text-xs font-bold uppercase text-slate-500 mb-1"
+              className="block text-xs font-bold uppercase text-slate-100 mb-1"
             >
               Unit Price
             </label>
@@ -584,23 +584,23 @@ export default function SaleForm({
               value={unitPrice}
               onChange={(e) => setUnitPrice(e.target.value)}
               required
-              className="w-full text-sm p-2 bg-amber-50 border border-amber-300 rounded-lg text-center font-bold"
+              className="w-full text-sm p-2 bg-slate-100 border rounded-lg text-center font-bold"
             />
           </div>
         </div>
 
-        <fieldset className="space-y-2 bg-indigo-50/50 p-3 rounded-xl border border-indigo-100">
-          <legend className="text-xs font-bold uppercase text-indigo-700 px-1">
+        <fieldset className="space-y-2 bg-indigo-100/60 p-3 rounded-xl border border-red-500">
+          <h3 className="text-md font-bold uppercase text-blue-700">
             Customer LPG Tank
-          </legend>
-          <p className="text-[11px] text-slate-500">
+          </h3>
+          <p className="text-[11px] text-slate-300">
             Brand of the empty cylinder returned by the customer (same weight as
             filled tank sold)
           </p>
           <div>
             <label
               htmlFor="customer-lpg"
-              className="block text-xs font-bold uppercase text-slate-500 mb-1"
+              className="block text-xs font-bold uppercase text-slate-100 mb-1"
             >
               Customer LPG
             </label>
@@ -626,20 +626,22 @@ export default function SaleForm({
         </fieldset>
 
         <div className="flex items-center justify-between pt-1">
-          <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+          <span className="text-xs font-bold uppercase tracking-wider text-white">
             Total Bill Summary:
           </span>
-          <span className="text-xl font-black text-blue-600" aria-live="polite">
+          <span className="text-xl font-black text-blue-500" aria-live="polite">
             {formatCurrency(total)}
           </span>
         </div>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl shadow transition text-sm"
-        >
-          {submitLabel}
-        </button>
+        <div className="pb-4">
+          <button
+            type="submit"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl shadow transition text-sm"
+          >
+            {submitLabel}
+          </button>
+        </div>
       </form>
     </div>
   );

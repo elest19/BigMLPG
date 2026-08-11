@@ -64,7 +64,7 @@ export default function StaffProfileModal({ onClose }) {
             <button
               type="button"
               onClick={handleCancel}
-              className="px-4 py-2 rounded-xl text-sm font-bold text-slate-600 bg-slate-100 hover:bg-slate-200"
+              className="px-4 py-2 rounded-xl text-sm font-bold text-white bg-red-600 hover:bg-red-700"
             >
               Cancel
             </button>
@@ -72,7 +72,7 @@ export default function StaffProfileModal({ onClose }) {
               type="button"
               onClick={handleSave}
               disabled={saving || !form.name.trim()}
-              className="px-4 py-2 rounded-xl text-sm font-bold text-white bg-red-600 hover:bg-red-700 disabled:opacity-50"
+              className="px-4 py-2 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
             >
               {saving ? 'Saving…' : 'Save Changes'}
             </button>
@@ -82,14 +82,14 @@ export default function StaffProfileModal({ onClose }) {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl text-sm font-bold text-slate-600 bg-slate-100 hover:bg-slate-200"
+              className="px-4 py-2 rounded-xl text-sm font-bold text-white bg-red-600 hover:bg-red-700"
             >
               Close
             </button>
             <button
               type="button"
               onClick={() => setEditing(true)}
-              className="px-4 py-2 rounded-xl text-sm font-bold text-white bg-red-600 hover:bg-red-700"
+              className="px-4 py-2 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700"
             >
               Edit Profile
             </button>
@@ -131,10 +131,6 @@ export default function StaffProfileModal({ onClose }) {
           ) : (
             <MaskedPasswordField id="staff-password-view" />
           )}
-
-          <p className="text-xs text-slate-400">
-            Signed in as <span className="font-semibold">{admin?.username}</span>
-          </p>
         </div>
       )}
     </Modal>
