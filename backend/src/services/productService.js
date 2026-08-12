@@ -207,6 +207,30 @@ export async function updateProduct(productId, data) {
   return result.rows[0];
 }
 
+export async function updateProductStock(productId, stockQuantity) {
+  const existing = await getProductById(productId);
+  if (!existing) throw new AppError("Product not found", 404);
+
+  const quantity = Number(stockQuantity);
+  if (!Number.isInteger(quantity) || quantity < 0) {
+    throw new AppError("Stock quantity must be 0 or greater", 400);
+  }
+
+  const health = computeHealthIndicator(quantity);
+
+  const result = await query(
+    `UPDATE lpg_products
+     SET stock_quantity = $2,
+         health_indicator = $3,
+         updated_at = NOW()
+     WHERE product_id = $1
+     RETURNING *`,
+    [productId, quantity, health],
+  );
+
+  return result.rows[0];
+}
+
 export async function archiveProduct(productId) {
   const existing = await getProductById(productId);
   if (!existing) throw new AppError("Product not found", 404);

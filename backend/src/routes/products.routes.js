@@ -23,6 +23,11 @@ router.put(
   validate,
 );
 router.patch(
+  "/:productId/stock",
+  ...productController.updateProductStock,
+  validate,
+);
+router.patch(
   "/:productId/archive",
   requireAdministrator,
   ...productController.archiveProduct,

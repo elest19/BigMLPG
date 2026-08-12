@@ -315,6 +315,13 @@ export default function SalesReportSection({ refreshKey = 0 }) {
               formula={summary?.netIncomeFullyPaidFormula}
             />
             <MetricCard
+              label="Actual Credit Net Income"
+              value={formatCurrency(summary?.actualCreditNetIncome ?? summary?.actualCreditSalesRevenue ?? 0)}
+              icon={<CreditBalanceIcon />}
+              tone="text-orange-600"
+              formula={summary?.actualCreditNetIncomeFormula}
+            />
+            <MetricCard
               label="Expected Credit Net Income"
               value={formatCurrency(summary?.expectedNetIncome ?? summary?.netIncome)}
               icon={<NetIncomeIcon />}

@@ -89,6 +89,16 @@ export function buildSalesReportSummary({
     ).toFixed(2),
   );
 
+  const actualCreditNetIncome = Number(
+    (
+      paidCreditSalesRevenue !== undefined
+        ? paidCreditSalesRevenue - creditOnlyCostOfGoods
+        : 0
+    ).toFixed(2),
+  );
+
+  const actualCreditNetIncomeFormula = `${formatCurrencyValue(paidCreditSalesRevenue,)} - ${formatCurrencyValue(creditOnlyCostOfGoods)}`;
+
   // Calculations
   const { netIncomeFullyPaid, expectedNetIncome, netIncomeQualified } =
     calculateNetIncomeComponents({
@@ -108,7 +118,8 @@ export function buildSalesReportSummary({
     totalVolumeKg: Number(totalVolumeKg || 0), // Total Volume
     creditOnlySalesRevenue, // Credit-only sales revenue
     creditOnlyCostOfGoods, // Credit-only cost of goods
-
+    actualCreditNetIncome,
+    actualCreditNetIncomeFormula,
     //Cards
     netIncomeQualifiedFormula: `(${formatCurrencyValue(netIncomeFullyPaid)} + ${formatCurrencyValue(expectedNetIncome)}) - ${formatCurrencyValue(totalExpenses)}`, // Total Net Income
     netIncomeFullyPaidFormula: `${formatCurrencyValue(fullyPaidSalesRevenue)} - ${formatCurrencyValue(fullyPaidSalesCostOfGoods)}`, // Fully Paid Net Income

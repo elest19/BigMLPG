@@ -133,6 +133,11 @@ export const api = {
       method: "PUT",
       body: JSON.stringify(body),
     }),
+  updateProductStock: (productId, body) =>
+    request(`/products/${productId}/stock`, {
+      method: "PATCH",
+      body: JSON.stringify(body),
+    }),
   deleteProduct: (productId) =>
     request(`/products/${productId}`, { method: "DELETE" }),
   getWeeklySummary: () => request("/products/summary/weekly"),

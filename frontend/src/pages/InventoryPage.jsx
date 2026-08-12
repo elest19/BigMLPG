@@ -74,6 +74,7 @@ function InventoryTable({
   onDelete,
   onArchive,
   onView,
+  onEditStock,
   isAdmin,
   archiveMode = false,
 }) {
@@ -139,7 +140,11 @@ function InventoryTable({
             <th className="p-3 text-center">Consumer Price</th>
             <th className="p-3 text-center">Retail Price</th>
             <th className="p-3 text-center">Date Created</th>
-            {isAdmin && <th className="p-3 text-center">Actions</th>}
+            {isAdmin ? (
+              <th className="p-3 text-center">Actions</th>
+            ) : (
+              <th className="p-3 text-center">Stock Action</th>
+            )}
           </tr>
         </thead>
         <tbody className="font-medium text-slate-700">
@@ -173,7 +178,7 @@ function InventoryTable({
                 <td className="p-3 text-center">
                   {new Date(p.created_at).toLocaleDateString()}
                 </td>
-                {isAdmin && (
+                {isAdmin ? (
                   <td className="p-3 text-center space-x-1">
                     <button
                       type="button"
@@ -204,6 +209,16 @@ function InventoryTable({
                       </>
                     )}
                   </td>
+                ) : (
+                  <td className="p-3 text-center">
+                    <button
+                      type="button"
+                      onClick={() => onEditStock?.(p)}
+                      className="text-xs font-bold bg-blue-600 text-slate-100 hover:bg-blue-700 hover:text-white px-2.5 py-1 rounded-lg"
+                    >
+                      Edit Stock
+                    </button>
+                  </td>
                 )}
               </tr>
             );
@@ -233,6 +248,7 @@ export default function InventoryPage() {
   const [saving, setSaving] = useState(false);
   const [inventoryRefreshKey, setInventoryRefreshKey] = useState(0);
   const [mobileDetail, setMobileDetail] = useState(null);
+    const [stockEditTarget, setStockEditTarget] = useState(null);
   const isMobile = useIsMobile();
 
   const archiveEligibleIds = useMemo(
@@ -347,7 +363,18 @@ export default function InventoryPage() {
             )
           )}
         </>
-      ) : null,
+      ) : (
+        <button
+          type="button"
+          onClick={() => {
+            setMobileDetail(null);
+            setStockEditTarget(product);
+          }}
+          className="rounded-lg bg-blue-600 px-3 py-2 text-xs font-bold text-white"
+        >
+          Edit Stock
+        </button>
+      ),
     });
   };
 
@@ -395,6 +422,25 @@ export default function InventoryPage() {
       setInventoryRefreshKey((k) => k + 1);
     } catch (err) {
       showToast("Update Failed", err.message, "error");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleStockUpdate = async () => {
+    if (!stockEditTarget) return;
+
+    try {
+      setSaving(true);
+      await api.updateProductStock(stockEditTarget.product_id, {
+        stockQuantity: Number(stockEditTarget.stock_quantity),
+      });
+      showToast("Stock Updated", "Inventory stock has been updated.");
+      setStockEditTarget(null);
+      await loadData();
+      setInventoryRefreshKey((k) => k + 1);
+    } catch (err) {
+      showToast("Stock Update Failed", err.message, "error");
     } finally {
       setSaving(false);
     }
@@ -469,6 +515,7 @@ export default function InventoryPage() {
                       onDelete={setDeleteTarget}
                       onArchive={setArchiveTarget}
                       onView={openProductDetails}
+                      onEditStock={setStockEditTarget}
                       isAdmin={isAdministrator}
                       archiveMode={showArchived}
                     />
@@ -906,6 +953,50 @@ export default function InventoryPage() {
                 className="w-full p-2 border rounded-lg"
               />
             </label>
+          </div>
+        </Modal>
+      )}
+
+      {stockEditTarget && (
+        <Modal
+          title={`Edit Stock - ${stockEditTarget.brand} ${stockEditTarget.weight_class}kg`}
+          onClose={() => setStockEditTarget(null)}
+          footer={
+            <>
+              <button
+                type="button"
+                onClick={() => setStockEditTarget(null)}
+                className="px-4 py-2 rounded-xl bg-red-600 text-sm font-bold text-white"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={saving}
+                onClick={handleStockUpdate}
+                className="px-4 py-2 rounded-xl bg-blue-600 text-white text-sm font-bold"
+              >
+                Save Stock
+              </button>
+            </>
+          }
+        >
+          <div className="space-y-3">
+            <label className="block text-xs font-bold uppercase text-slate-500">
+              Stock Quantity
+            </label>
+            <input
+              type="number"
+              min="0"
+              value={stockEditTarget.stock_quantity}
+              onChange={(e) =>
+                setStockEditTarget({
+                  ...stockEditTarget,
+                  stock_quantity: e.target.value,
+                })
+              }
+              className="w-full p-2 border rounded-lg"
+            />
           </div>
         </Modal>
       )}

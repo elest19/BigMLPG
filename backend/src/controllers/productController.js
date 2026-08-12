@@ -90,6 +90,26 @@ export const updateProduct = [
   }),
 ];
 
+export const updateProductStock = [
+  param("productId").notEmpty(),
+  body("stockQuantity")
+    .notEmpty()
+    .isInt({ min: 0 })
+    .withMessage("Stock quantity must be 0 or greater"),
+  asyncHandler(async (req, res) => {
+    const product = await productService.updateProductStock(
+      req.params.productId,
+      req.body.stockQuantity,
+    );
+    broadcastRealtime("inventory:changed", {
+      action: "updated",
+      resource: "product",
+      product,
+    });
+    res.json({ success: true, data: product });
+  }),
+];
+
 export const archiveProduct = [
   param("productId").notEmpty(),
   asyncHandler(async (req, res) => {

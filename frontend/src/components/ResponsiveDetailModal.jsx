@@ -3,7 +3,7 @@ import Modal from "./Modal";
 export default function ResponsiveDetailModal({ title, onClose, details = [], footer }) {
   return (
     <Modal title={title} onClose={onClose} size="lg" footer={footer}>
-      <div className="max-h-[45vh] overflow-y-auto">
+      <div className="max-h-[45vh] overflow-y-auto pb-4">
         <dl className="space-y-2 text-sm ">
           {details.map((item) => (
             <div key={item.label} className="flex flex-col gap-1 rounded-lg bg-white border border-slate-200 shadow-md p-3 sm:flex-row sm:items-start sm:justify-between">
